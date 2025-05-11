@@ -65,10 +65,13 @@ public:
     void setSimpleTevReg(u32 id) { mSimpleTevReg |= (1 << id); }
     void simpleDraw(u32 viewNo) { simpleDraw(viewNo, nullptr, 1); }
 
+    void setScale(const JGeometry::TVec3f &scale) { mScale = scale; }
+
     bool isAvailable() const { return mModelData[0] != nullptr; }
     bool tstSimpleTevReg(u32 id) const { return (mSimpleTevReg & (1 << id)) != 0; }
     bool tstConcatViewMode() const { return mModelData[0]->checkFlag(0x10); }
     bool tstKartBBoardOn() { return (_18 & 2) != 0; }
+    void setSomeFlag() { _18 |= 1; }
 
     J3DModelData *getModelData(u16 level) const {
 #line 188

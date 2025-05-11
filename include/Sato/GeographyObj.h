@@ -22,8 +22,8 @@ public:
     ~ItemColReaction() {}
 
     void init();
-    void setFlg(u32, u8);
-    bool tstFlg(u32);
+    void setFlg(u32 flgId, u8 flgVal);
+    u8 tstFlg(u32);
 
 private:
     u8 mFlags[16];
@@ -67,21 +67,22 @@ public:
     bool tstUserFlg1(int kart_index) const;                                                     // 0x8022a0ec
     void clrUserFlg1(int);                                                                      // 0x8022a190
     void setUserFlg1(int);                                                                      // 0x8022a230
-    void getHitSoundDegree();                                                                   // 0x8022a2d0
+    f32  getHitSoundDegree();                                                                   // 0x8022a2d0
     void createMultiBoundsPtrAll(u8);                                                           // 0x8022a314
     void calcBoundsGlPos();                                                                     // 0x8022a420
     void createBoundsSphere(f32, f32);                                                          // 0x8022a57c
-    void createMultiBoundsSphere(u8, f32, f32);                                                 // 0x8022a66c
+    bool createMultiBoundsSphere(u8, f32, f32);                                                 // 0x8022a66c
     void createBoundsCylinder(J3DModelData *, f32, f32);                                        // 0x8022a6fc
     void createBoundsCylinder(f32, f32, f32);                                                   // 0x8022a81c
-    void createMultiBoundsCylinder(const u8, J3DModelData *, f32, f32);                               // 0x8022a934
+    bool createMultiBoundsCylinder(const u8 index, J3DModelData *modelData, f32 radius, f32 height);  // 0x8022a934
     void createBoundsCube(J3DModelData *);                                                      // 0x8022aa04
-    void setColObjPos(const JGeometry::TVec3f &, const u8);                                           // 0x8022ab20
-    stRandom *getGeoRnd();                                                                            // 0x8022ac14
+    bool setColObjPos(const JGeometry::TVec3f &, const u8);                                     // 0x8022ab20
+    stRandom *getGeoRnd();                                                                      // 0x8022ac14
     void moveShadowModel();                                                                     // 0x8022ac38
     void createSoundMgr();                                                                      // 0x8022acec
+    f32 getColRadius();                                                                         // UNUSED
     f32 getColScaleRadius();                                                                    // 0x8022ad44
-    void getAxisMaxScale();                                                                     // 0x8022adb4
+    f32 getAxisMaxScale();                                                                      // 0x8022adb4
     void lockMdl();                                                                             // 0x8022ae58
     void getSRTMtx(Mtx m);                                                                      // 0x8022ae88
     void setBoundScaleAll();                                                                    // 0x8022aef0
@@ -98,7 +99,6 @@ public:
     void createMultiBoundsSphere(u8, J3DModelData *);
     void createMultiBoundsCylinder(u8, f32, f32, f32);
     void setLODBias();
-    void getColRadius();
 
     void setItemColReaction(u8 p1, u8 p2) { mReaction.setFlg(p1, p2); }
 
@@ -129,21 +129,40 @@ public:
     void clrObjFlagCheckItemHitting() { mGeoObjFlag &= ~2; }
     void clrObjFlagHidding() { mGeoObjFlag &= ~0x20; }
     
-    void clrCheckKartHitFlag(int kartId) { mKartHitFlags &=  ~(1 << kartId); }
-    void clrAllCheckKartHitFlag() { mKartHitFlags = 0; }
-    void clrAllIsHitKartFlg() { mKartFlags = 0; }
+    void clrCheckKartHitFlag(int kartId) { mCheckKartHitFlags &=  ~(1 << kartId); }
+    void clrAllCheckKartHitFlag() { mCheckKartHitFlags = 0; }
+    void clrAllIsHitKartFlg() { mIsHitKartFlags = 0; }
 
     void setObjFlagCheckItemHitting() { mGeoObjFlag |= 2; }    
     void setObjFlagSimpleDraw() { mObjFlag |= 1; }
     void setObjFlagMainResource() { mObjFlag |= 2; }
+    void setObjFlagNoCollision() { mObjFlag |= 0x80; }
+    void setObjFlagLODBias() { mObjFlag |= 0x100;  }
     void setObjFlagHidding() { mGeoObjFlag |= 0x20; }
 
     bool tstItemHitting() const { return mGeoObjFlag & 0x4; }
-    void setAllCheckKartHitFlag() { mKartHitFlags = 0xffffffff; }
+    void setAllCheckKartHitFlag() { mCheckKartHitFlags = 0xffffffff; }
     bool tstObjFlagSimpleDraw() const { return mObjFlag & 1; }
+    bool tstObjFlagNorm() const { return mObjFlag & 4; }
+    bool tstObjFlagShadow() const { return mObjFlag & 8; }
     bool tstObjFlagHidding() const { return mGeoObjFlag & 0x20; }
     void clrObjFlagLODBias() { mObjFlag &= ~0x100;  }
-    bool tstIsHitKartFlg(int kartNo) const { return (mKartFlags & (1 << kartNo)) != 0; }
+    bool tstIsHitKartFlg(int kartNo) const { return (mIsHitKartFlags & (1 << kartNo)) != 0; }
+
+    ObjColBase *getBoundsChecked(u8 num) {
+        JUT_MINMAX_ASSERT(0, num, mBoundsNum);
+        return getBounds(num);
+    }
+
+    u8 getBoundsNum() {
+        return mBoundsNum;
+    }
+
+    void conditionallySetSomeFlag() {
+        if (tstObjFlagNorm()) {
+            mModel.setSomeFlag();
+        }
+    }
 
     ItemObj *getColItemObj() const { return mColItemObj; }
     u32 getKind() const { return mKind; }
@@ -168,7 +187,14 @@ public:
     {  
         if(!tstObjFlagSimpleDraw())
             mModel.createModel(heap, p2, 0x60000);
-    }                                            
+    }
+
+    bool IsHitKartHelper(const JGeometry::TVec3f &, f32, JGeometry::TVec3f *);
+
+    void boundsCheck(u32 num, u32 nBoundsNum) {
+#line 217
+        JUT_MINMAX_ASSERT(0, num, nBoundsNum);
+    }                                   
     virtual void configAnimationMode() {}                                                           // 1C
     virtual void createShadowModel(JKRSolidHeap *heap, u32);                                        // 20
     virtual void initByKind() {}                                                                    // 24
@@ -205,11 +231,12 @@ protected:
     JGeometry::TVec3f mVel;               // 4C
     int _58;                              // 58, some sort of ID
     ExModel mModel;                       // 5C
-    const CrsData::SObject *mObjData;           // E8
+    const CrsData::SObject *mObjData;     // E8
     u32 mGeoObjFlag;                      // EC
-    u32 mKartHitFlags;                    // F0, maybe u64?
-    u32 mKartFlags;                       // F4
-    u8 _f8[0xfc - 0xf8];                  //
+    u32 mCheckKartHitFlags;               // F0
+    u32 mIsHitKartFlags;                  // F4
+    u16 mIsHitKartSoundFlg;               // F8
+    u16 mIsHitKartSoundPlayedFlg;         // FA
     JSULink<GeographyObj> mObjLink;       // FC
     int mKind;                            // 10C
     u8 _110[0x114 - 0x110];               //
@@ -219,10 +246,12 @@ protected:
     AnmController *mAnmCtrl;              // 120
     ItemColReaction mReaction;            // 124
     ObjColBase **mBounds;                 // 134
-    u8 _13c[0x140 - 0x138];               //
+    JGeometry::TVec3f* mColObjPos;        // 138
+    JGeometry::TVec3f* _13c;              // 13c
     u8 mBoundsNum;                        // 140
+    u8 _141;                              // 141
     GameAudio::ObjectSoundMgr *mSoundMgr; // 144
-    u8 _148[0x14c - 0x148];               //
+    u8 mUserFlg1;                         // 148
 }; // Size: 0x14c
 
 // TODO: Move to Shiraiwa?
