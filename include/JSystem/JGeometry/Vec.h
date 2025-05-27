@@ -2,7 +2,6 @@
 #define JGEOMETRY_VEC_H
 
 #include <JSystem/JGeometry/Util.h>
-#include "JSystem/JGeometry/Vec.h"
 #include "types.h"
 
 namespace JGeometry {

@@ -152,6 +152,11 @@ public:
 
     bool tstIsHitKartFlg(int kartNo) const { return (mIsHitKartFlags & (1 << kartNo)) != 0; }
 
+    void conditionallySetSomeFlag()
+    {
+        if (tstObjFlagNorm()) { mModel.setSomeFlag(); }
+    }
+
     ItemObj *getColItemObj() const { return mColItemObj; }
     u32 getKind() const { return mKind; }
     ItemColReaction &getItemReaction() { return mReaction; }

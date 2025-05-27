@@ -10,10 +10,12 @@
 class GeographyObjManager : JKRDisposer
 {
 public:
-    GeographyObjManager(const CrsData &);
+    GeographyObjManager(const CrsData &);      // 0x80222b4c
 
-    void calc();
-    void createModel(JKRSolidHeap *, u32);
+    void calc();                               // 0x80222b4c
+    void createModel(JKRSolidHeap *, u32);     // 0x802250b4
+    void createModel_norm(const JSUListIterator<GeographyObj>&, GeographyObj**, JKRSolidHeap*, u32); // 0x802250b4
+    void createModel_shadow(GeographyObj*, GeographyObj**, JKRSolidHeap*, u32);                      // 0x80225444
     void reset(const CrsData &);
     void drawGXObj(u32 cameraNo);
     void drawPrim(u32 cameraNo);
@@ -40,6 +42,13 @@ public:
 
     GeographyObj *createSubObj(u32 id);
     GeographyObj *createPrevDrawSubObj(u32 id);
+
+    void Collide_norm(const JSUListIterator<GeographyObj>&, const int&, const JGeometry::TVec3f&, const float&);
+
+    void loadAnimation(GeographyObj*, GeographyObj**);
+    void registerAnimation(GeographyObj*);
+    void makeSharedDL(GeographyObj*, GeographyObj**);
+    void makeShadowSharedDL(GeographyObj*, GeographyObj**);
 
     f32 getKartHitDepthNormalObj(int kart_index) const { return mHitDepth[kart_index]; }
     static void createMgr(const CrsData &crsData) { gMgr = new GeographyObjManager(crsData); }
