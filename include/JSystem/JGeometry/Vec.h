@@ -205,7 +205,7 @@ namespace JGeometry {
             z = val;
         }
     
-        bool equals(const TVec3<f32> &other) 
+        bool equals(const TVec3<f32> &other) const 
         {
             bool equal = false;
             if (x == other.x && y == other.y && z == other.z)

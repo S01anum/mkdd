@@ -41,6 +41,10 @@ public:
     TJugem *getJugem(int camera_index) const;
     TBalloonManager *getBalloonMgr(int kart_index) const;
 
+    ExGeographyObj *search_boundEx(const JGeometry::TVec3f &pos, GeographyObj *obj);
+    ExGeographyObj *search_boundSp(const JGeometry::TVec3f &pos, GeographyObj *obj);
+    ExGeographyObj *search_boundSp(const JGeometry::TVec3f &pos, f32);
+
     GeographyObj *createSubObj(u32 id);
     GeographyObj *createPrevDrawSubObj(u32 id);
 

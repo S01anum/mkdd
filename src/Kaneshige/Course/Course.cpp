@@ -195,9 +195,9 @@ void Course::reset()
     if (_180)
         _184.resetFrame();
 
-    _530 = 0xff;
-    _534 = 0;
-    _538 = 0.0f;
+    mAppendGndAttr = 0xff;
+    mAppendGndAttrIdx = 0;
+    mAppendGndHeight = 0.0f;
 }
 
 Course::~Course() {}
@@ -1994,24 +1994,22 @@ bool Course::searchAppendGround(const TVec3f &pos)
         if (pos.y >= 5760.0f)
         {
             ret = true;
-            _530 = 10;
+            mAppendGndAttr = 10;
             if (pos.z >= 0.0f)
             {
                 if (pos.x >= 0.0f)
-                    _534 = 3;
+                    mAppendGndAttrIdx = 3;
                 else
-                    _534 = 2;
+                    mAppendGndAttrIdx = 2;
             }
             else
             {
                 if (pos.x >= 0.0f)
-                    _534 = 4;
+                    mAppendGndAttrIdx = 4;
                 else
-                {
-                    _534 = 1;
-                }
+                    mAppendGndAttrIdx = 1;
             }
-            _538 = 6000.0f;
+            mAppendGndHeight = 6000.0f;
         }
 
     return ret;

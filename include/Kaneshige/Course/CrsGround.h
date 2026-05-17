@@ -7,8 +7,9 @@
 #include "JSystem/JGeometry.h"
 #include "Kaneshige/Course/Course.h"
 
+class ExGeographyObj;
+class GeographyObj;
 class GeoCannon;
-class GeographyObj; // forward declaration
 
 class CrsGround
 {
@@ -55,11 +56,11 @@ public:
     void searchBase(GeographyObj *, const JGeometry::TVec3f &, const JGeometry::TVec3f &, u32);                                                   // 0x801a1974
     void search(const JGeometry::TVec3f &, const JGeometry::TVec3f &, f32, bool);                                                                 // 0x801a21e4
     void roundDepth(const JGeometry::TVec3f &);                                                                                                   // 0x801a262c
-    void checkGridBySphere(f32 *, const CrsData::SColInfoSphere &, u32, f32, f32, f32);                                                           // 0x801a2698
+    bool checkGridBySphere(f32 *, const CrsData::SColInfoSphere &, u32, f32, f32, f32);                                                           // 0x801a2698
     bool checkPolygonCover(const JGeometry::TVec3f &, const JGeometry::TVec3f &, const JGeometry::TVec3f &, f32, const CrsData::Ground *, f32 *); // 0x801a290c
-    void checkPolygonCoverMain(const JGeometry::TVec3f &, const CrsData::SColInfoSphere &, u32, f32, f32, f32, const CrsData::Ground *);          // 0x801a2d20
-    void isInsideGrid(const JGeometry::TVec3f &, f32, f32, f32, f32);                                                                             // 0x801a2ec0
-    void searchGridIndex(int *, int *, Course *, const JGeometry::TVec3f &, f32, f32, f32, f32, int, int);                                        // 0x801a3004
+    f32 checkPolygonCoverMain(const JGeometry::TVec3f &, const CrsData::SColInfoSphere &, u32, f32, f32, f32, const CrsData::Ground *);           // 0x801a2d20
+    bool isInsideGrid(const JGeometry::TVec3f &, f32, f32, f32, f32);                                                                             // 0x801a2ec0
+    static void searchGridIndex(int *, int *, Course *, const JGeometry::TVec3f &, f32, f32, f32, f32, int, int);                                        // 0x801a3004
     f32 getHeight() const;                                                                                                                        // 0x801a3168
     void getNormal(JGeometry::TVec3f *) const;                                                                                                    // 0x801a3170
     u8 getCameraCode() const;                                                                                                                     // 0x801a319c
@@ -85,13 +86,15 @@ public:
     EMat getMaterial() const { return mMaterial; }
     u32 getAttrIndex() const { return mAttrIdx; }
     EAttr getAttribute() const { return mAttribute; }
-    GeographyObj *getObject() const { return mGeoObj; }
+    ExGeographyObj *getObject() const { return mGeoObj; }
+
+    bool isInsideGrid(const CrsData::SColInfoSphere &sphereInfo, f32 x, f32 y, f32 z) {
+        return isInsideGrid(sphereInfo._0, sphereInfo.d, x, y, z);
+    }
 
 
     bool isObject() const { return mGeoObj != nullptr; }
-    bool exceptValley(bool except) {
-        mExceptVally = except;
-    }
+    void exceptValley(bool except) { mExceptValley = except; }
 
     static f32 getOverLevel() { return 50.0f; }
 
@@ -99,10 +102,10 @@ private:
     Course *mCourse;
     JGeometry::TVec3f mWorldPos;
     JGeometry::TVec3f _10;
-    bool mExceptVally;
-    u8 _1d;
+    bool mExceptValley;
+    bool _1d;
     CrsData::Ground *mGround;
-    GeographyObj *mGeoObj;
+    ExGeographyObj *mGeoObj;
     JGeometry::TVec3f mNormal;
     JGeometry::TVec3f mVelocity;
     JGeometry::TVec3f mWallNormal;

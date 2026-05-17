@@ -301,6 +301,8 @@ public:
     template<class T>
     static T *ExNew(CrsData::SObject &object) { return new T(object); }
 
+    ExObjColBase *getExBounds() const { return mExBounds; }
+
     ExObjColBase *mExBounds;
     JGeometry::TVec3f _150;
     f32 _15c;
@@ -314,7 +316,7 @@ class TMapObjHioNode : public GeographyObj
 public:
     TMapObjHioNode(u32 id) : GeographyObj(id) {}
     TMapObjHioNode(const CrsData::SObject &rObj) : GeographyObj(rObj) {}
-    virtual ~TMapObjHioNode() {}
+    virtual ~TMapObjHioNode();
 };
 
 #endif

@@ -88,8 +88,8 @@ public:
         u16 zGridNum;
         int xStart; // TVec2?
         int zStart;
-        int xSize;
-        int zSize;
+        u32 xSize;
+        u32 zSize;
         u16 matNum;
         u32 indexTableOffset;
         u32 groundTableOffset;
@@ -289,10 +289,10 @@ public:
     public:
         f32 checkPolygonCoverWall(const JGeometry::TVec3f &, const SColInfoSphere &, const Ground *);                                                                                     // 0x801a0590
         Ground *searchGround(stPlaneParam *, const JGeometry::TVec3f &, const JGeometry::TVec3f &, const Ground *, const u16 *, const SGround *, const JGeometry::TVec3f *, u32, bool);
-        Ground *checkPolygonBySphere(JGeometry::TVec3f*, float *, const CrsData *, const SColInfoSphere &, float *);
+        Ground *checkPolygonBySphere(JGeometry::TVec3f*, f32 *, const CrsData *, const SColInfoSphere &, f32 *);
     
-    private:
         u8 mCount;
+        u16 _2;
         int mGroundIndex;
     };
 
@@ -378,8 +378,8 @@ public:
     PathData *getPathData(u16 pathIdx) const;
     PointData *getPointData(u16, u16) const;
     void patchCamDataForStaffRoll(Language, VideoMode);
-    SMaterial *searchSameAttr(unsigned char, unsigned char) const;
-    u16 searchMaterial(unsigned char, unsigned char) const;
+    SMaterial *searchSameAttr(u8, u8) const;
+    u16 searchMaterial(u8, u8) const;
     int getFogType() const;
     f32 getFogStartZ() const;
     f32 getFogEndZ() const;
@@ -388,6 +388,12 @@ public:
     int getStartCameraID() const;
     int getStartLoserCameraID() const;
     int searchCameraID(u32 camTag) const;
+    f32 getXGridMin() const { return mCollionData->xStart; }
+    f32 getZGridMin() const { return mCollionData->zStart; }
+    f32 getXGridWidth() const { return mCollionData->xSize; }
+    f32 getZGridWidth() const { return mCollionData->zSize; }
+    int getXGridNum() const { return mCollionData->xGridNum; }
+    int getZGridNum() const { return mCollionData->zGridNum; }
     int getMatNum() const { return mCollionData->matNum; }
     ECourseID getCourseID() const { return (ECourseID)mObjectData->courseID; }
     u8 getTotalLapNumber() const { return mObjectData->totalLapNum; }
@@ -403,7 +409,6 @@ public:
     int getMGParamNumber() const { return mObjectData->mgParamNum; }    
     int getPathNumber() const { return mObjectData->pathNum; }
     int getStartPointNumber() const { return mObjectData->startPointNum; }
-    
     bool isDummyStartLineOn() const  { return mObjectData->dummyStartLineOn != 0; } 
     bool isSkyFollow() const { return mObjectData->skyMode != 0; }
     bool isShaking() const { return mObjectData->shaking != 0; }

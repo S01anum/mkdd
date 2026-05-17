@@ -186,6 +186,10 @@ public:
     int getTrackSectorNumber() const { return mTrackSectorNum; }
     CrsData *getCrsData() const { return mCrsData; }
 
+    u32 getAppendGroundAttr() const { return mAppendGndAttr; }
+    u32 getAppendGroundAttrIndex() const { return mAppendGndAttrIdx; }
+    f32 getAppendGroundHeight() const { return mAppendGndHeight; }
+
     Sector *getSector(int no) const
     {
 #line 300
@@ -319,9 +323,9 @@ private: // add all documented stuff from Ghidra
     u8 mSkyMode;
     bool mIsTextCourse25;
     u8 _052e[0x530 - 0x52e]; // padding?
-    u32 _530;
-    u32 _534;
-    f32 _538;
+    u32 mAppendGndAttr;
+    u32 mAppendGndAttrIdx;
+    f32 mAppendGndHeight;
 }; // Size: 0x53C
 
 #endif
