@@ -45,8 +45,8 @@ public:
     virtual void createModel(JKRSolidHeap *, u32); // 0x802918c0
     virtual void calc(); // 0x802919dc
     virtual void createColModel(J3DModelData *); // 0x80291a0c
-    virtual void setPosition(const JGeometry::TVec3f &pos) { mPos.set(pos); } // 0x80291a10
-    virtual void setRMtx(const JGeometry::TPos3f &rMtx) { mRotMtx.set(rMtx.mMtx); } // 0x80291a2c
+    virtual void setRMtx(const JGeometry::TPos3f &rMtx); // 0x80291a2c
+    virtual void setPosition(const JGeometry::TVec3f &pos); // 0x80291a10
     virtual void hideModel(u32); // 0x80291a60
     virtual void show(u8); // 0x80291ab4
     virtual void update(); // 0x80291b08

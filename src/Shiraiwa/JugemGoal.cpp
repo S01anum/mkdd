@@ -1,9 +1,7 @@
-#include "JSystem/JAudio/JASFakeMatch2.h"
 #include "Shiraiwa/JugemMain.h"
 
-
 Vec TJugem::scGoalPoints0[4] = {
-    { 0.0f,    0.0f, 0.0f },
+    { 0.0f,    scEraseHeight, 0.0f },
     { 0.0f,  750.0f, 0.0f },
     { 0.0f, -170.0f, 0.0f },
     { 0.0f, -150.0f, 0.0f },
@@ -29,3 +27,5 @@ void TJugem::doFunc_Goal() {
 bool TJugem::checkJugemAppearRank() {
     return true;
 }
+
+#include "JSystem/JAudio/JASFakeMatch2.h"

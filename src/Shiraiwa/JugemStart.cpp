@@ -1,4 +1,3 @@
-#include "JSystem/JAudio/JASFakeMatch2.h"
 #include "Kaneshige/RaceMgr.h"
 #include "Shiraiwa/JugemMain.h"
 #include "Shiraiwa/JugemRodItem.h"
@@ -10,7 +9,7 @@ Vec TJugem::scStartPoints0_1p[6] = {
     { 0.0f, 175.0f, -350.0f },
     { 0.0f,   0.0f, -350.0f },
     { 0.0f,   0.0f, -350.0f },
-    { 0.0f,   0.0f, -350.0f },
+    { 0.0f,   scEraseHeight, -350.0f },
 };
 
 Vec TJugem::scStartPoints0_2p[5] = {
@@ -18,7 +17,7 @@ Vec TJugem::scStartPoints0_2p[5] = {
     { 300.0f, -60.0f, -400.0f },
     { 300.0f,  40.0f, -400.0f },
     { 300.0f, 240.0f, -400.0f },
-    { 300.0f,   0.0f, -400.0f },
+    { 300.0f,   scEraseHeight, -400.0f },
 };
 
 s16 TJugem::sStartWaitCameraFrame;
@@ -150,6 +149,17 @@ void TJugem::doFunc_StartWaitHide() {
     }
 }
 
+void TJugem::startNextAnime() {
+    mAnmPlayer._10 = 1;
+    mAnmPlayer._e |= 1;
+    TJugemItem *tJugemItem = mJugemItem;
+    if (tJugemItem == nullptr) {
+        return;
+    }
+    tJugemItem->mJugemAnmPlayer._10 = 1;
+    tJugemItem->mJugemAnmPlayer._e |= 1;
+}
+
 int TJugem::getSignalState() {
     int signalState = -1;
     switch (getState()) {
@@ -163,13 +173,4 @@ int TJugem::getSignalState() {
     return signalState;
 }
 
-void TJugem::startNextAnime() {
-    mAnmPlayer._10 = 1;
-    mAnmPlayer._e |= 1;
-    TJugemItem *tJugemItem = mJugemItem;
-    if (tJugemItem == nullptr) {
-        return;
-    }
-    tJugemItem->mJugemAnmPlayer._10 = 1;
-    tJugemItem->mJugemAnmPlayer._e |= 1;
-}
+#include "JSystem/JAudio/JASFakeMatch2.h"

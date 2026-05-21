@@ -30,10 +30,11 @@
 #include "dolphin/types.h"
 #include "types.h"
 #include "Shiraiwa/JugemMain.h"
+#include "mathHelper.h"
 
 f32 TJugem::scJugemDistance = 700.0f;
-f32 TJugem::scJugemHeight = 200.0f;
-f32 TJugem::scEraseHeight = 7000.0f;
+const f32 TJugem::scJugemHeight = 200.0f;
+const f32 TJugem::scEraseHeight = 7000.0f;
 static const u8 scJugemCameraMax = 4;
 s16 TJugem::sChaseDistance = 0x3c;
 f32 TJugem::sChaseAccel = 0.5f;
@@ -173,6 +174,11 @@ TJugem::~TJugem() {
             delete mAnmController[i];
         }
     }
+}
+
+void TJugem::makeAnmCtrl(int num) {
+    // UNUSED
+    JUT_MINMAX_ASSERT(0, num, 5);
 }
 
 void TJugem::loadAnimation() {
@@ -353,9 +359,10 @@ void TJugem::initFunc_Erase() {}
 
 void TJugem::doFunc_Erase() {
     f32 normalisedRange = SiUtil::getNormalRange(getStateCount(), 0.0f, sShadowEraseFrame);
-
-    getShadowModel()->setAlpha((1.0f - normalisedRange) * 255.0f);
-    if ((1.0f - normalisedRange) <= 0.0f) {
+    
+    f32 a = (1.0f - normalisedRange);
+    getShadowModel()->setAlpha(255.0f * a);
+    if (a <= 0.0f) {
         setState(0);
     }
 }
@@ -981,9 +988,20 @@ void TJugem::chase(int param_1, const JGeometry::TVec3f &param_2, const JGeometr
         param_4.add(param_3, mVel);
     }
 }
-
-void TJugemHeadItem::hide() {
+void TJugem::hide() {
     setObjFlagHidding();
+    ShadowModel *shadowModel = getShadowModel();
+    if (shadowModel != nullptr) {
+        shadowModel->clearVisible(mCameraNum);
+    }
+
+    if (mJugemItem) {
+        mJugemItem->hide();
+    }
+
+    if (mJugemHeadItem) {
+        mJugemHeadItem->hide();
+    }
 }
 
 void TJugem::hideAll() {
@@ -1024,10 +1042,6 @@ void TJugem::show(u8 id) {
         shadowModel->setVisible(mCameraNum);
         getShadowModel()->setAlpha(0xff);
     }
-}
-
-void TJugemHeadItem::show(u8) {
-    clrObjFlagHidding();
 }
 
 void TJugem::wearCap(u32 id) {
@@ -1101,7 +1115,7 @@ bool TJugem::nodeCallBack(J3DJoint* joint, int param_2) {
         J3DModelData* modelData = model->mModelData;
 
         // FIX: This is almost certainly wrong. Need to work out correct casting.
-        TJugemItem* obj = (TJugemItem *)((ExModel *)model->getUserArea())->_14;
+        TJugemHeadItem* obj = (TJugemHeadItem *)((ExModel *)model->getUserArea())->_14;
         if (obj) {
             Mtx& mtx = model->getAnmMtx(jointIndex);
 
@@ -1116,14 +1130,6 @@ bool TJugem::nodeCallBack(J3DJoint* joint, int param_2) {
         }
     }
     return true;
-}
-
-void TJugemHeadItem::setPosition(const JGeometry::TVec3f &pos) {
-    mPos.set(pos);
-}
-
-void TJugemHeadItem::setRMtx(const JGeometry::TPos3f &rMtx) {
-    mRotMtx.set(rMtx.mMtx);    
 }
 
 void TJugem::setCameraNum(u8 cam) {
@@ -1168,3 +1174,5 @@ u32 TJugem::getScreenType() {
     }
     return screenType;
 }
+
+#include "JSystem/JAudio/JASFakeMatch2.h"

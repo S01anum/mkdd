@@ -38,6 +38,10 @@ struct J3DSys
     Mtx &getViewMtx() { return mViewMtx; }
     J3DDrawBuffer *getDrawBuffer(int idx) { return mDrawBuffer[idx]; }
 
+    J3DModel *getModel() { return _38; }
+
+    static void setCurrentMtx(const Mtx m) { PSMTXCopy(m, mCurrentMtx); }
+
     Mtx mViewMtx;                  // _000
     J3DMtxCalc *mMtxCalc;          // _030
     u32 _34;                       // _034 /* bitfield */

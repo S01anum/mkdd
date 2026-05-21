@@ -236,18 +236,24 @@ namespace JGeometry {
         }
 
         void setQuat(const TQuat4f &q) {
-            f32 yy = 2.0f * q.y * q.y;
-            f32 zz = 2.0f * q.z * q.z;
-            f32 xx = 2.0f * q.x * q.x;
+            const f32 qx = q.x;
+            const f32 qy = q.y;
+            const f32 qz = q.z;
+            const f32 qw = q.w;
 
-            f32 xy = 2.0f * q.x * q.y;
-            f32 xz = 2.0f * q.x * q.z;
-            f32 yz = 2.0f * q.y * q.z;
+            f32 xx = 2.0f * qx * qx;
+            f32 wx = 2.0f * qw * qx;
+            
+            f32 yy = 2.0f * qy * qy;
+            f32 wy = 2.0f * qw * qy;
 
-            f32 wx = 2.0f * q.w * q.x;
-            f32 wy = 2.0f * q.w * q.y;
-            f32 wz = 2.0f * q.w * q.z;
-
+            f32 xy = 2.0f * qx * qy;
+            f32 xz = 2.0f * qx * qz;
+            f32 yz = 2.0f * qy * qz;
+            
+            f32 zz = 2.0f * qz * qz;
+            f32 wz = 2.0f * qw * qz;
+            
             this->mMtx[0][0] = 1.0f - yy - zz;
             this->mMtx[0][1] = xy - wz;
             this->mMtx[0][2] = xz + wy;
@@ -290,7 +296,13 @@ namespace JGeometry {
         void getScale(TVec3f &rDest) const;
         void setScale(const TVec3f &rSrc);
 
-        void setRotate(const TVec3f &, const TVec3f &);
+        void setRotate(const TVec3f& v1, const TVec3f& v2) {
+            (void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;
+            (void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;(void)0;
+            TQuat4f q;
+            q.setRotate(v1, v2);
+            setQuat(q);
+        }
         void setRotate(const TVec3f &, f32);
 
         void mult33(TVec3f &) const;

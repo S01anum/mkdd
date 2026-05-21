@@ -123,10 +123,6 @@ void TJugemVoidRod::reset() {
     }
 }
 
-void TJugemRodItem::hide() {
-    setObjFlagHidding();
-}
-
 void TJugemVoidRod::loadAnimation() {
     J3DModelData *modelData = mModel.getModelData();
     if (TJugem::isDemoMode()) {
@@ -176,6 +172,15 @@ void TJugemVoidRod::calc() {
 
 void TJugemVoidRod::createColModel(J3DModelData *j3dModelData) {}
 
+void TJugemVoidRod::setPosition(const JGeometry::TVec3f &rPos) { 
+    mPos.set(rPos); 
+}
+
+void TJugemVoidRod::setRMtx(const JGeometry::TPos3f &rMtx) { 
+    mRotMtx.set(rMtx.mMtx); 
+}
+
+
 void TJugemVoidRod::hideModel(u32 param_1) {
     mModel.clipAll(param_1, false);
     if (_184 != nullptr) {
@@ -188,10 +193,6 @@ void TJugemVoidRod::show(u8 param_1) {
     if (_184 != nullptr) {
         _184->show(param_1);
     }
-}
-
-void TJugemRodItem::show(u8) {
-    clrObjFlagHidding();
 }
 
 void TJugemVoidRod::update() {
@@ -262,7 +263,7 @@ bool TJugemVoidRod::nodeCallBack(J3DJoint *joint, int param_2) {
 
         // FIX: This is almost certainly wrong.
         //      Need to find out what casts to use to make this work correctly.
-        TJugemVoidRod *obj = (TJugemVoidRod *)((ExModel *)model->getUserArea())->_14;
+        TJugemRodItem *obj = (TJugemRodItem *)((ExModel *)model->getUserArea())->_14;
         if (obj) {
             Mtx& mtx = model->getAnmMtx(jointIndex);
 

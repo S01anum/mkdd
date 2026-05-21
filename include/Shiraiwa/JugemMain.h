@@ -40,6 +40,7 @@ public:
     virtual void InitExec();
     virtual void MoveExec();
 
+    void makeAnmCtrl(int num);
     void resetStaticData();
     void hold(u32, u32);
     void setJugemItem(TJugemItem *, u32);
@@ -73,6 +74,7 @@ public:
     void fixNear(JGeometry::TVec3f *);
     void setLimitation(JGeometry::TVec3f *, f32, f32);
     void chase(int, const JGeometry::TVec3f &, const JGeometry::TVec3f &, JGeometry::TVec3f &);
+    void hide();
     void hideAll();
     void show(u8);
     
@@ -197,8 +199,8 @@ public:
 private:
     static StateFuncSet<TJugem> sTable[23];
     static f32 scJugemDistance;
-    static f32 scJugemHeight;
-    static f32 scEraseHeight;
+    static const f32 scJugemHeight;
+    static const f32 scEraseHeight;
     static s16 sChaseDistance;
     static f32 sChaseAccel;
     static f32 sChaseDecel;
@@ -230,6 +232,7 @@ private:
     static Vec scReversePoints2[4];
     static Vec scReversePoints0_1p[5];
     static Vec scReversePoints0_multi[5];
+    static const Vec scReversePoints1_1p[6]; // unused
     static const Vec scReversePoints1_multi[6];
     static s16 scReverseJudgeTime;
     static s16 scReviveJudgeTime;

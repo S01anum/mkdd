@@ -3,6 +3,7 @@
 
 #include <JSystem/JGeometry/Vec.h>
 #include "JSystem/JGeometry/Util.h"
+#include "JSystem/JMath/JMath.h"
 #include "dolphin/mtx.h"
 #include "types.h"
 
@@ -141,9 +142,9 @@ namespace JGeometry {
                 return;
             }
 
-            f32 halfAngle = 0.5f * atan2f(len, from.dot(to)) * amount;
-            this->xyz().scale(sin(halfAngle) / len, axis);
-            this->w = cos(halfAngle);
+            f32 halfAngle = JMAAtan2Radian(len, from.dot(to)) * amount;
+            this->xyz().scale(::sinf(halfAngle) / len, axis);
+            this->w = cosf(halfAngle);
         }
 
         void setRotate(const TVec3f& a, const TVec3f& b)

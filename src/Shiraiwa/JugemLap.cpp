@@ -1,4 +1,3 @@
-#include "JSystem/JAudio/JASFakeMatch2.h"
 #include "Kaneshige/RaceMgr.h"
 #include "Sato/AnmController.h"
 #include "Shiraiwa/JugemMain.h"
@@ -19,7 +18,7 @@ Vec TJugem::scLapPointsIn_1p[10] = {
     { 400.0f,  100.0f, -500.0f },
     { 400.0f,  100.0f, -500.0f },
     { 400.0f, -450.0f, -500.0f },
-    { 400.0f,    0.0f, -500.0f },
+    { 400.0f, scEraseHeight, -500.0f },
 };
 
 Vec TJugem::scLapPointsIn_multi[10] = {
@@ -32,7 +31,7 @@ Vec TJugem::scLapPointsIn_multi[10] = {
     { 550.0f,  120.0f, -500.0f },
     { 550.0f,  120.0f, -500.0f },
     { 550.0f, -310.0f, -500.0f },
-    { 550.0f,    0.0f, -500.0f },
+    { 550.0f, scEraseHeight, -500.0f },
 };
 
 void TJugem::initFunc_Lap() {
@@ -100,3 +99,5 @@ bool TJugem::checkLapProc() {
     }
     return false;
 }
+
+#include "JSystem/JAudio/JASFakeMatch2.h"

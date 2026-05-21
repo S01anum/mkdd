@@ -1,5 +1,6 @@
 #include "Inagaki/GameAudioMain.h"
 #include "JSystem/J3D/J3DJoint.h"
+#include "JSystem/J3D/J3DModel.h"
 #include "JSystem/J3D/J3DSys.h"
 #include "JSystem/JAudio/JASFakeMatch2.h"
 #include "JSystem/JGeometry/Matrix.h"
@@ -23,6 +24,7 @@
 #include "Yamamoto/kartCtrl.h"
 #include "dolphin/mtx.h"
 #include "types.h"
+#include "mathHelper.h"
 
 J3DAnmTevRegKey *TJugemRodSignal::sJugemRodSignalBrkAnm;
 const char *TJugemRodSignal::scRedParticleName = "mk_jg_signalR";
@@ -148,6 +150,10 @@ void TJugemRodSignal::calc() {
     }
 }
 
+void TJugemRodSignal::getJointPos(JGeometry::TVec3f *, s32 index) {
+
+}
+
 void TJugemRodSignal::createEmitter(JPABaseEmitter **emitter, s32 index, const char *effectName) {
     Mtx &mtx = mModel.getModel()->getAnmMtx(index);
     JGeometry::TVec3f pos(mtx[0][3], mtx[1][3], mtx[2][3]);
@@ -155,6 +161,22 @@ void TJugemRodSignal::createEmitter(JPABaseEmitter **emitter, s32 index, const c
     
     JGeometry::TVec3f stackScale = mScale;
     (*emitter)->setGlobalScale(stackScale);
+}
+
+void TJugemRodSignal::updatePosition(JPABaseEmitter **emitter, s32 index) {
+    if ((*emitter) != nullptr) {
+        bool bVar1 = false; // TODO: Inline
+        if ((*emitter)->checkStatus(0x8) != 0 &&
+            ((*emitter)->mAlivePtclBase.getNum() + (*emitter)->mAlivePtclChld.getNum() == 0)) {
+            bVar1 = true;
+        }
+
+        if (!bVar1) {
+            JPASetRMtxTVecfromMtx(mModel.getModel()->getAnmMtx(index), (*emitter)->mGlobalRot, &(*emitter)->mGlobalTrs);
+            return;
+        }
+    }
+    *emitter = nullptr;
 }
 
 void TJugemRodSignal::startCountDown() {
@@ -180,58 +202,9 @@ void TJugemRodSignal::update() {
     bool bVar1;
 
     // Left Emitter
-    JPABaseEmitter* emitter = mEmitterLeft;
-    int jointNumber = sLeftJointNo;
-    if (emitter != nullptr) {
-        bVar1 = false;
-        if (emitter->checkStatus(0x8) != 0 &&
-            (emitter->mAlivePtclBase.getNum() + emitter->mAlivePtclChld.getNum() == 0)) {
-            bVar1 = true;
-        }
-
-        if (!bVar1) {
-            JPASetRMtxTVecfromMtx(mModel.getModel()->getAnmMtx(jointNumber), emitter->mGlobalRot, &emitter->mGlobalTrs);
-            goto end_left; // Match assembly jump behavior
-        }
-    }
-    mEmitterLeft = nullptr;
-    end_left:;
-
-    // Middle Emitter
-    emitter = mEmitterMiddle;
-    jointNumber = sMiddleJointNo;
-    if (emitter != nullptr) {
-        bVar1 = false;
-        if (emitter->checkStatus(0x8) != 0 &&
-            (emitter->mAlivePtclBase.getNum() + emitter->mAlivePtclChld.getNum() == 0)) {
-            bVar1 = true;
-        }
-
-        if (!bVar1) {
-            JPASetRMtxTVecfromMtx(mModel.getModel()->getAnmMtx(jointNumber), emitter->mGlobalRot, &emitter->mGlobalTrs);
-            goto end_mid;
-        }
-    }
-    mEmitterMiddle = nullptr;
-    end_mid:;
-
-    // Right Emitter
-    emitter = mEmitterRight;
-    jointNumber = sRightJointNo;
-    if (emitter != nullptr) {
-        bVar1 = false;
-        if (emitter->checkStatus(0x8) != 0 &&
-            (emitter->mAlivePtclBase.getNum() + emitter->mAlivePtclChld.getNum() == 0)) {
-            bVar1 = true;
-        }
-
-        if (!bVar1) {
-            JPASetRMtxTVecfromMtx(mModel.getModel()->getAnmMtx(jointNumber), emitter->mGlobalRot, &emitter->mGlobalTrs);
-            goto end_right;
-        }
-    }
-    mEmitterRight = nullptr;
-    end_right:;
+    updatePosition(&mEmitterLeft, sLeftJointNo);
+    updatePosition(&mEmitterMiddle, sMiddleJointNo);
+    updatePosition(&mEmitterRight, sRightJointNo);
 }
 
 bool TJugemRodSignal::isAcceptEffect() {
@@ -312,8 +285,9 @@ void TJugemRodPukuPuku::createModel(JKRSolidHeap *jkrSolidHeap, u32 param_2) {
     u16 idx = mModel.getModelData()->getJointName()->getIndex("puku_root");
     J3DJoint *joint = mModel.getModelData()->getJointNodePointer(idx);
     joint->setCallBack(nodeCallBack);
-    mModel._14 = nullptr;
+    mModel._14 = (u32*)this;
 
+        
     for (int i = 0; i < 3; i++) {
         if (sDemoAnmStateTable[i].tAnmInfo != nullptr) {
             TAnmPlayer::registAnimations(
@@ -401,22 +375,20 @@ bool TJugemRodPukuPuku::nodeCallBack(J3DJoint* joint, int timing) {
     if (timing == 0) {
         int idx = joint->getJntNo();
 
-        J3DModel *model = j3dSys._38;
+        J3DModel *model = j3dSys.getModel();
         // FIX: This is almost certainly wrong. Need to work out correct casting.
-        TJugemRodItem *tJugemRod = (TJugemRodItem *)((ExModel*)model->getUserArea())->_14;
-        
-        if (tJugemRod != nullptr) {
-            MtxPtr calc_mtx = model->getAnmMtx(idx);
 
-            // JGeometry::TVec3f test;
-            // test.set(calc_mtx[0][0], calc_mtx[0][1], calc_mtx[0][2]);
+        TJugemRodPukuPuku *jugem = (TJugemRodPukuPuku *)((ExModel *)model->getUserArea())->_14;
+        if (jugem) {
+            MtxPtr anm_mtx = model->getAnmMtx(idx);
+            JGeometry::TPos3f &calc_mtx = jugem->mRotMtx;
+            calc_mtx[0][3] = jugem->mPos.x;
+            calc_mtx[1][3] = jugem->mPos.y;
+            calc_mtx[2][3] = jugem->mPos.z;
 
-            calc_mtx[1][3] = calc_mtx[0][1];
-            calc_mtx[2][3] = calc_mtx[0][2];
-            calc_mtx[3][3] = calc_mtx[0][3];
-
-            model->setAnmMtx(idx, calc_mtx);
-            PSMTXCopy(calc_mtx, J3DSys::mCurrentMtx);
+            
+            PSMTXCopy(calc_mtx, anm_mtx);
+            J3DSys::setCurrentMtx(anm_mtx);
         }
     }
 

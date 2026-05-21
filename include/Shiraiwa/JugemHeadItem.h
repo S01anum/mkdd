@@ -12,11 +12,11 @@ public:
     }
     virtual ~TJugemHeadItem() {}
     virtual void calc() {} 
-    virtual void setPosition(const JGeometry::TVec3f &pos); // 80
-    virtual void setRMtx(const JGeometry::TPos3f &rMtx); // 84
+    virtual void setPosition(const JGeometry::TVec3f &pos) { mPos.set(pos); } // 80
+    virtual void setRMtx(const JGeometry::TPos3f &rMtx) { mRotMtx.set(rMtx.mMtx);  } // 84
     virtual void hideModel(u32 p1) { mModel.clipAll(p1, false); } // 88
-    virtual void show(u8); // 8c
-    virtual void hide(); // 90
+    virtual void show(u8) { clrObjFlagHidding(); } // 8c
+    virtual void hide() { setObjFlagHidding(); } // 90
     virtual void hideAll() { hide(); } // 94
 
 public:

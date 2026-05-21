@@ -1,22 +1,21 @@
-#include "JSystem/JAudio/JASFakeMatch2.h"
 #include "Inagaki/GameAudioMain.h"
 #include "Kaneshige/RaceMgr.h"
 #include "Shiraiwa/JugemMain.h"
 
 Vec TJugem::scReversePoints0_1p[5] = {
-    { -400.0f,   0.0f, -1050.0f },
-    { -300.0f,  50.0f,  -250.0f },
-    {  -50.0f,  50.0f,  -150.0f },
-    {  -25.0f,  50.0f,  -150.0f },
-    {    0.0f,  50.0f,  -350.0f }
+    { -400.0f,  scJugemHeight, -1050.0f },
+    { -300.0f,  50.0f,         -250.0f },
+    {  -50.0f,  50.0f,         -150.0f },
+    {  -25.0f,  50.0f,         -150.0f },
+    {    0.0f,  50.0f,         -350.0f }
 };
 
 Vec TJugem::scReversePoints0_multi[5] = {
-    { -400.0f,   0.0f, -1050.0f },
-    { -300.0f, 100.0f,  -250.0f },
-    {  -50.0f, 100.0f,  -150.0f },
-    {  -25.0f, 100.0f,  -150.0f },
-    {    0.0f,  90.0f,  -250.0f }
+    { -400.0f,   scJugemHeight, -1050.0f },
+    { -300.0f, 100.0f,          -250.0f },
+    {  -50.0f, 100.0f,          -150.0f },
+    {  -25.0f, 100.0f,          -150.0f },
+    {    0.0f,  90.0f,          -250.0f }
 };
 
 const Vec TJugem::scReversePoints1_multi[6] = {
@@ -29,10 +28,10 @@ const Vec TJugem::scReversePoints1_multi[6] = {
 };
 
 Vec TJugem::scReversePoints2[4] = {
-    { 0.0f,    0.0f, 0.0f },
-    { 0.0f,    0.0f, 0.0f },
-    { 0.0f, -450.0f, 0.0f },
-    { 0.0f,    0.0f, 0.0f }
+    { 0.0f, 0.0f,          0.0f },
+    { 0.0f, 0.0f,          0.0f },
+    { 0.0f, -450.0f,       0.0f },
+    { 0.0f, scEraseHeight, 0.0f }
 };
 
 s16 TJugem::scReverseJudgeTime = 90;
@@ -63,8 +62,8 @@ void TJugem::initFunc_Reverse() {
 }
 
 void TJugem::doFunc_Reverse() {
-    move(getKartNum());
-    GetGameAudioMain()->startKartSystemSe(getKartNum(), 0x1000a);
+    move(mKartNum);
+    GetGameAudioMain()->startKartSystemSe((u8)mKartNum, 0x1000a);
     if (!mSplineInterp.checkUnknownBool13()) {
         switch (getScreenType()) {
             case 0:
@@ -108,3 +107,6 @@ bool TJugem::checkReviveProc() {
     }
     return (_278 > scReviveJudgeTime);
 }
+
+
+#include "JSystem/JAudio/JASFakeMatch2.h"

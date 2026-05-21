@@ -24,10 +24,12 @@ public:
     virtual ~TJugemRodItem() {}
     virtual void setPosition(const JGeometry::TVec3f &rPos) { mPos.set(rPos); }       // 80
     virtual void setRMtx(const JGeometry::TPos3f &rMtx) { mRotMtx.set(rMtx.mMtx); }  // 84
-    virtual void show(u8);                   // 88
-    virtual void hide();                     // 8C
-    virtual void hideAll() { hide(); }       // 90
-    virtual void changeAnimation(int) {}     // 94
+    virtual void show(u8) { // 88
+        clrObjFlagHidding();
+    }
+    virtual void hide() { setObjFlagHidding(); } // 8C
+    virtual void hideAll() { hide(); }           // 90
+    virtual void changeAnimation(int) {}         // 94
 
     static const s32 cJugemRodItem_Max;
     TAnmPlayer mAnmPlayer;
@@ -123,7 +125,7 @@ public:
     void createModel(JKRSolidHeap *, u32);
     void show(u8);
     void update();
-    void calc();
+    void calc() {}
 
 
     static J3DAnmTexPattern *sJugemRodBoardBtpAnm;
@@ -143,7 +145,7 @@ public:
     void createModel(JKRSolidHeap *, u32);
     void show(u8);
     void update();
-    void calc();
+    void calc() { _164.update(); }
 
     static J3DAnmTevRegKey *sJugemRodBoard2BrkAnm;
     static const f32 scObjScale[4];
@@ -161,7 +163,7 @@ public:
     void createModel(JKRSolidHeap *, u32);
     void show(u8);
     void update();
-    void calc();
+    void calc() { _164.update(); }
 
     static J3DAnmTevRegKey *sJugemRodBoardRevBrkAnm;
     static const f32 scObjScale[4];

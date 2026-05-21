@@ -22,6 +22,13 @@ public:
         mEchoRate[i] = rate;
     }
 
+    void updateVolume() {
+        smCameraVolume[0] = 1.0f;
+        smCameraVolume[1] = 1.0f;
+        smCameraVolume[2] = 1.0f;
+        smCameraVolume[3] = 1.0f;
+    }
+
     static f32 smCameraVolume[N];
 
     u8 _1a4[0x1dc - 0x1a4];

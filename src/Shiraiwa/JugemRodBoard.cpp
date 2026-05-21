@@ -4,7 +4,7 @@
 #include "Sato/ObjUtility.h"
 #include "Shiraiwa/JugemRodItem.h"
 #include "Shiraiwa/SiUtil.h"
-
+#include "mathHelper.h"
 
 J3DAnmTexPattern *TJugemRodBoard::sJugemRodBoardBtpAnm;
 const f32 TJugemRodBoard::scObjScale[4] = { 1.0f, 1.3f, 1.6f, 1.6f };
@@ -165,13 +165,3 @@ void TJugemRodBoardRev::update() {
     setModelMatrixAndScale();
     mModel.update(0);
 }
-
-void TJugemRodBoardRev::calc() {
-    _164.update();
-}
-
-void TJugemRodBoard2::calc() {
-    _164.update();
-}
-
-void TJugemRodBoard::calc() {}
