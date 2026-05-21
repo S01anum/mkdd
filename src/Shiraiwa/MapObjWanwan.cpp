@@ -279,7 +279,7 @@ void TMapObjWanwan::doFunc_Attacked() {
     }
     else {
         if (mAnmObjCluster.getFrame() == 0.0f) {
-            mAnmObjCluster.setFrame(0.0f);
+            mAnmObjCluster.stop();
         }
         fallDown(-1, true);
     }
