@@ -1,8 +1,8 @@
 #ifndef JUGEMMAIN_H
 #define JUGEMMAIN_H
 
-#include "Sato/GeographyObj.h"
 #include "Sato/StateObserver.h"
+#include "Shiraiwa/Objects/MapObjHioNode.h"
 #include "Shiraiwa/JugemItem.h"
 #include "Shiraiwa/JugemHeadItem.h"
 #include "Shiraiwa/JugemRodItem.h"

@@ -309,14 +309,4 @@ public:
     JSULink<GeographyObj> mExLinks; // 160
 };
 
-// TODO: Move to Shiraiwa?
-
-class TMapObjHioNode : public GeographyObj
-{
-public:
-    TMapObjHioNode(u32 id) : GeographyObj(id) {}
-    TMapObjHioNode(const CrsData::SObject &rObj) : GeographyObj(rObj) {}
-    virtual ~TMapObjHioNode() {}
-};
-
 #endif

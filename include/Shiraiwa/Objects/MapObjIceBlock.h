@@ -1,7 +1,7 @@
 #ifndef MAPOBJICEBLOCK_H
 #define MAPOBJICEBLOCK_H
 
-#include "Sato/GeographyObj.h"
+#include "Shiraiwa/Objects/MapObjHioNode.h"
 
 class AnmController;
 class AnmControlTrans;

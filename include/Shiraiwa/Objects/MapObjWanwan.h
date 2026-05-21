@@ -5,11 +5,11 @@
 #include "JSystem/JGeometry/Vec.h"
 #include "JSystem/JParticle/JPAEmitter.h"
 #include "Kaneshige/Course/CrsGround.h"
-#include "Sato/GeographyObj.h"
 #include "Sato/J3DAnmObject.h"
 #include "Sato/StateObserver.h"
 #include "Sato/StringObj.h"
 #include "Shiraiwa/Coord3D.h"
+#include "Shiraiwa/Objects/MapObjHioNode.h"
 #include "macros.h"
 #include "types.h"
 
