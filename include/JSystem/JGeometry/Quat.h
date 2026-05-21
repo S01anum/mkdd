@@ -53,6 +53,16 @@ namespace JGeometry {
     class TQuat4<f32> : public Quaternion {
     public:
         JGeometry::TVec3f& xyz() { return (JGeometry::TVec3f&)*this; }
+
+        TQuat4() {}
+        TQuat4(f32 _x, f32 _y, f32 _z, f32 _w)
+        {
+            this->x = _x;
+            this->y = _y;
+            this->z = _z;
+            this->w = _w;
+        }
+        
         template <typename A>
         void set(A _x, A _y, A _z, A _w) {
             x = _x;
