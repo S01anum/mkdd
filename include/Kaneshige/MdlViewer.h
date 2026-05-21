@@ -131,6 +131,8 @@ public:
     void appendHio(HioNode *);
     // Inline
     MVCamera *getCamera() { return mCamera; }
+    MVChaseLight *getChaseLight() { return mChaseLight; }
+    
 private:
     int _0; //
     MVCamera *mCamera; // 04

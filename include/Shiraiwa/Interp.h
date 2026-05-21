@@ -28,6 +28,11 @@ public:
     void reset();
     void calcPoint(f32);
     void getSamplePoint(u8, u8 *, u8 *);
+
+    inline bool checkUnknownBool13() { return _13; }
+    inline s16 getUnknownValue10() { return _10; }
+    inline f32 getRatio() { return mRatio; }
+
 protected:
     u8 _4;
     u8 _5;

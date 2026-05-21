@@ -26,6 +26,7 @@ public:
 
     ShadowKind getShadowKind() const { return mKind; }
     u8 getAlpha() const { return _94; }
+    void setAlpha(u8 newAlpha) { _94 = newAlpha; }
     u8 getFlag95() const { return _95; }
     void setFlag95(bool flag) { _95 = flag; }
 

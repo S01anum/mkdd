@@ -18,6 +18,7 @@ class J3DAnmObjBase
 public:
     J3DAnmObjBase() { mModel = nullptr; }
 
+    void loadJ3DModelData(void *, u32);
     void initFrameCtrl(J3DAnmBase *base);
     void frameProc() { mFrameCtrl.update(); }
     void update() { mFrameCtrl.update(); }
@@ -82,6 +83,7 @@ public:
     virtual ~J3DAnmObjMaterial() {}
     virtual void anmFrameProc() { mAnmBase->setFrame(mFrameCtrl.getFrame()); }
 
+    static void setupColorAnmData(J3DAnmColor **, J3DModelData *, void *);
     static void setupTexSRTAnmData(J3DAnmTextureSRTKey **, J3DModelData *, void *);
     static void setupTevRegAnmData(J3DAnmTevRegKey **, J3DModelData *, void *);
     static void setupTexPatternAnmData(J3DAnmTexPattern **, J3DModelData *, void *);
@@ -91,6 +93,9 @@ public:
         mAnmBase = anm;
         J3DAnmObjBase::initFrameCtrl(mAnmBase);
     }
+
+    template <typename T>
+    static void setMaterialAnmTev(T**, J3DModelData*);
 
     J3DAnmBase *getAnmBase() { return mAnmBase; }
     void setAnmBase(J3DAnmBase *base) { mAnmBase = base; }

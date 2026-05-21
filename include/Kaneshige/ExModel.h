@@ -88,17 +88,17 @@ public:
 
 public:
     // Vtable 0x0
-    u16 mLevelCnt;             // 04
-    J3DModelData **mModelData; // 08
-    J3DModel **mModel;         // 0C
-    u32 mMagic;                // 10
-    int _14;                   // 
-    u16 _18;                   // 
-    u16 _1a;                   //
-    u16 mSimpleTevReg;         // 1C
-    JGeometry::TVec3f mScale;  // 20
-    Mtx mBaseTRMtx;            // 2C
-    Mtx _5c;                   // 5C
+    u16 mLevelCnt;                // 04
+    J3DModelData **mModelData;    // 08
+    J3DModel **mModel;            // 0C
+    u32 mMagic;                   // 10
+    u32 *_14;                     // 14 - Some void ptr equivalent?
+    u16 _18;                      // 18
+    u16 _1a;                      // 1A
+    u16 mSimpleTevReg;            // 1C
+    JGeometry::TVec3f mScale;     // 20
+    Mtx mBaseTRMtx;               // 2C
+    Mtx _5c;                      // 5C
 }; // Size: 0x8c
 
 class ExMDRecord {
