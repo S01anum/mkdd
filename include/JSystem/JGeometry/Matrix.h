@@ -123,6 +123,34 @@ namespace JGeometry {
         void setEulerY(f32 val);
         void setEulerZ(f32 val);
 
+        void setEulerXYZ(const TVec3f &rSrc);
+
+        void setEulerXYZ(f32 x, f32 y, f32 z) { // fabricated? might actually exist
+            f32 cr = std::cosf(x); // f26
+            f32 cp = std::cosf(y); // f31
+            f32 cy = std::cosf(z); // f30
+            f32 sr = std::sinf(x);   // f29
+            f32 sp = std::sinf(y); // f28
+            f32 sy = std::sinf(z); // f7
+
+            // ???
+            f32 tmp = sy * sp;
+            f32 cpy = (cy * cp);
+            f32 spy = sp * sy;
+
+            this->mMtx[0][0] = ((tmp) * sr + (cp * cr));
+            this->mMtx[1][0] = (sr * cy);
+            this->mMtx[2][0] = -(sp * cr) + (sy * cp * sr);
+            
+            this->mMtx[0][1] = ((-sr * cp) + (spy) * cr);
+            this->mMtx[1][1] = (cy * cr);
+            this->mMtx[2][1] = (sp * sr + sy * (cp * cr));
+
+            this->mMtx[0][2] = (cy * sp);
+            this->mMtx[1][2] = (-sy);
+            this->mMtx[2][2] = (cpy);
+        }
+
         void getQuat(TQuat4f &rDest) const { // Non matching
             f32 z,y,x;
             x = this->mMtx[0][0];

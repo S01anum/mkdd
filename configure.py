@@ -1355,7 +1355,7 @@ config.libs = [
             Object(NonMatching, "Shiraiwa/JugemRodSignal.cpp"),
             Object(NonMatching, "Shiraiwa/JugemGoal.cpp"),
             Object(NonMatching, "Shiraiwa/JugemFlag.cpp"),
-            Object(NonMatching, "Shiraiwa/MapObjWanwan.cpp"),
+            Object(Equivalent, "Shiraiwa/MapObjWanwan.cpp"),
             Object(Matching, "Shiraiwa/MapObjWanwanChain.cpp"),
             Object(Matching, "Shiraiwa/AnmPlayer.cpp"),
             Object(NonMatching, "Shiraiwa/MapObjSkyShip.cpp"),

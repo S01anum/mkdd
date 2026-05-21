@@ -49,13 +49,14 @@ public:
     J3DAnmObjCluster() {
         mDeformData = nullptr;
     }
+    
     virtual ~J3DAnmObjCluster() {}
     virtual void anmFrameProc();
 
     void attach(J3DAnmCluster *);
 
     static void loadClusterAnmData(J3DAnmCluster **, void *);
-    static void loadClusterData(J3DDeformData * *, void *);
+    static void loadClusterData(J3DDeformData **, void *);
     static void setDeformData(ExModel *, J3DDeformData *, bool);
 
     void setExModel(ExModel *mdl, J3DDeformData *deformData) {
