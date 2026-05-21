@@ -2,8 +2,10 @@
 
 #include "JSystem/JAudio/JASFakeMatch2.h"
 
+#include "JSystem/JGeometry/Vec.h"
 #include "Kameda/MotorManager.h"
 #include "Kaneshige/RaceMgr.h"
+#include "Sato/GeographyObj.h"
 #include "Sato/GeographyObjMgr.h"
 #include "Sato/JPEffectPerformer.h"
 #include "Yamamoto/kartCtrl.h"
@@ -284,8 +286,9 @@ void KartCrash::MakeTornado() {
     u32 num = body->mMynum;
 
     if (body->getChecker()->CheckCrash() == false) {
-        GeographyObj* obj = GetGeoObjMgr()->getKartReactHitObjectList(body->mMynum)[16];
-        _4 = obj->mPos;
+        _4 = (ExGeographyObj*)GetGeoObjMgr()->getKartReactHitObjectList(body->mMynum)[16];
+        JGeometry::TVec3f stack_8;
+        _4->Search_Bound(stack_8);
 
     }
 }

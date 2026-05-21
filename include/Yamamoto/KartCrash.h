@@ -42,7 +42,8 @@ public:
     // void MakeRollCrash();
 private:
     KartBody* mBody;
-    JGeometry::TVec3f _4;
+    ExGeographyObj* _4;
+    u32 _8;
     u8 _C;
     u8 _D;
     u16 _E;
