@@ -7,7 +7,7 @@
 
 Demo2D::Demo2D(JKRHeap *heap) {
     mNode = new (heap, 0) Demo2DHioNode();
-    mOrtho = System::mspJ2DOrtho;
+    mOrtho = System::getJ2DOrtho();
     mScreen = new (heap, 0) J2DScreen();
 
     mScreen->set("Demo.blo", 0x0040000, GETJ2DManager()->getArchive());
@@ -17,11 +17,10 @@ Demo2D::Demo2D(JKRHeap *heap) {
 void Demo2D::init() {}
 
 void Demo2D::draw() {
-    if ((mNode->mParam._4A & 1) &&
-        RaceMgr::getManager()->mRaceInfo->mDemoType != 0) {
-    mOrtho->setPort();
+    if ((mNode->mParam._4A & 1) && RCMGetManager()->isWaitDemoMode()) {
+        mOrtho->setPort();
 
-    mScreen->draw(0.0f, 0.0f, mOrtho);
+        mScreen->draw(0.0f, 0.0f, mOrtho);
     }
 }
 
