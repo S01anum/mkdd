@@ -286,14 +286,30 @@ void KartCrash::MakeTornado() {
     u32 num = body->mMynum;
 
     if (body->getChecker()->CheckCrash() == false) {
-        _4 = (ExGeographyObj*)GetGeoObjMgr()->getKartReactHitObjectList(body->mMynum)[16];
+        _4 = (TMapObjStamper*)GetGeoObjMgr()->getKartReactHitObjectList(body->mMynum)[16];
         JGeometry::TVec3f stack_8;
-        _4->Search_Bound(stack_8);
+        _4->frameProc();
 
     }
 }
 
-void KartCrash::DoTornadeCenter() {}
+void KartCrash::DoTornadeCenter() {
+    KartBody* body = mBody;
+    JGeometry::TVec3f newVel;
+
+    if (body->mVel.y > 0.0f) {
+        _4->getPosition(&newVel);
+        body->_4bc += 0.174444f;
+        newVel.y = body->mPos.y;
+        newVel.sub(body->mPos);
+        f32 length_8 = newVel.length();
+
+        newVel.normalize();
+
+        body->mVel.x = newVel.x * length_8;
+        body->mVel.z = newVel.z * length_8;
+    }
+}
 
 void KartCrash::DotornadeCrashCrl() {}
 

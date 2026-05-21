@@ -3,6 +3,7 @@
 
 #include "JSystem/JGeometry/Vec.h"
 #include "Sato/ItemObj.h"
+#include "Shiraiwa/Objects/MapObjHioNode.h"
 
 class KartBody;
 
@@ -42,7 +43,7 @@ public:
     // void MakeRollCrash();
 private:
     KartBody* mBody;
-    ExGeographyObj* _4;
+    TMapObjStamper* _4;
     u32 _8;
     u8 _C;
     u8 _D;
