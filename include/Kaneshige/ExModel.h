@@ -56,7 +56,7 @@ public:
     virtual void setCurrentViewNo(u32);                               // 0x801a5614
 
     // Inlines
-    const Mtx &getBaseTRMtx() { return mBaseTRMtx; }
+    const Mtx &getBaseTRMtx() { return mBaseTRMtx.mMtx; }
     void hide(u32 p1) { clipAll(p1, false); }
     void show(u32 p1) { clipAll(p1, true); }
     bool isAllShapePacketHidding(u32 viewNo) { return isAllShapePacketHidding(0, viewNo); }
@@ -88,17 +88,17 @@ public:
 
 public:
     // Vtable 0x0
-    u16 mLevelCnt;             // 04
-    J3DModelData **mModelData; // 08
-    J3DModel **mModel;         // 0C
-    u32 mMagic;                // 10
-    int _14;                   // 
-    u16 _18;                   // 
-    u16 _1a;                   //
-    u16 mSimpleTevReg;         // 1C
-    JGeometry::TVec3f mScale;  // 20
-    Mtx mBaseTRMtx;            // 2C
-    Mtx _5c;                   // 5C
+    u16 mLevelCnt;                // 04
+    J3DModelData **mModelData;    // 08
+    J3DModel **mModel;            // 0C
+    u32 mMagic;                   // 10
+    u32 *_14;                     // 14 - Some void ptr equivalent?
+    u16 _18;                      // 18
+    u16 _1a;                      // 1A
+    u16 mSimpleTevReg;            // 1C
+    JGeometry::TVec3f mScale;     // 20
+    JGeometry::TPos3f mBaseTRMtx; // 2C
+    Mtx _5c;                      // 5C
 }; // Size: 0x8c
 
 class ExMDRecord {
