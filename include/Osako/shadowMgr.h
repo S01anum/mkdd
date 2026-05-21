@@ -10,9 +10,16 @@
 class ShadowManager : public JKRDisposer 
 {
 public:
-    ShadowManager();
-
     typedef JGadget::TList<ShadowModel*> List;
+
+    ShadowManager();
+    ~ShadowManager() {
+        mspShadowManager = nullptr;
+
+        _18.clear();
+        _28.clear();
+        _38.clear();
+    }
 
     List &getShadowModelList(ShadowModel::ShadowKind);
     void regist(ShadowModel *);
