@@ -92,6 +92,7 @@ public:
     }
 
     RaceKartLight *getLight(u32 viewNo) {
+#line 112
         JUT_MAX_ASSERT(viewNo, 4);
         return mKartLight[viewNo];
     }

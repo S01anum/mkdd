@@ -153,6 +153,8 @@ public:
             mLap++;
     }
 
+    int getLap() { return mLap; }
+
     bool incBalloon();
     bool decBalloon();
 

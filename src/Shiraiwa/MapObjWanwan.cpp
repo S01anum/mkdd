@@ -215,7 +215,7 @@ void TMapObjWanwan::doFunc_Wait() {
     else if (mWalkTimer > 0) {
         mWalkTimer--;
     }
-createEmitterOnGround(&mpEmitter, "mk_wanSmoke_a");
+    createEmitterOnGround(&mpEmitter, "mk_wanSmoke_a");
 }
 
 void TMapObjWanwan::initFunc_Jump() {
@@ -279,7 +279,7 @@ void TMapObjWanwan::doFunc_Attacked() {
     }
     else {
         if (mAnmObjCluster.getFrame() == 0.0f) {
-            mAnmObjCluster.setFrame(0.0f);
+            mAnmObjCluster.stop();
         }
         fallDown(-1, true);
     }
@@ -403,7 +403,7 @@ void TMapObjWanwan::initFunc_Back() {
 
     JGeometry::TVec3f t;
     mRotMtx.getZDir(t); 
-    jumpStart(t, 12.0f);
+    jumpStart(t, -3.0f);
 }
 
 void TMapObjWanwan::doFunc_Back() {
@@ -439,46 +439,54 @@ void TMapObjWanwan::fallDown(s32 nextState, bool p2) {
     createEmitterOnGround(&mpEmitter, "mk_wanSmoke_a");
 }
 
-// Nonmatching
-// https://decomp.me/scratch/N6GWY
 void TMapObjWanwan::turnTo() {
     f32 targetAngle = mAttackAngle;
-    f32 rotate = mRotate;
 
-    f32 minAngle = targetAngle - 3.141593f;
-    f32 maxAngle = targetAngle + 3.141593f;
+    f32 limit = targetAngle - normalizeRelativeAngle(mRotate, targetAngle - F_PI, targetAngle + F_PI);
 
-    if (minAngle <= maxAngle)
-    {
-        f32 range = maxAngle - minAngle; // 2pi
-
-        while (rotate < minAngle)
-        {
-            rotate += range;
-        }
-
-        while (rotate >= maxAngle)
-        {
-            rotate -= range;
-        }
-    }
-
-    rotate = _22c;
+    f32 rotate = _22c;
     if (StateObserver::getState() == 1) {
         rotate *= 2.0f;
     }
 
-    if (-rotate < targetAngle - minAngle) {
+    if (limit < -rotate) {
         mRotate -= rotate;
     }
-    else if (rotate > targetAngle - minAngle) {
+    else if (limit > rotate) {
         mRotate += rotate;
     }
     else {
         mRotate = targetAngle;
     }
 
-    setRotate(mRotate);
+    // eh i think it calls setrotate but that causes regswaps, so it's probably a layer of inlines
+    mRotate = mRotate;
+    const f32 x = 0;
+    const f32 y = mRotate;
+    const f32 z = _230;
+    f32 cr = cos(x); // f26
+    f32 cp = cos(y); // f31
+    f32 cy = cos(z); // f30
+    f32 sr = sin(x);   // f29
+    f32 sp = sin(y); // f28
+    f32 sy = sin(z); // f7
+
+    // ???
+    f32 tmp = sy * sp;
+    f32 cpy = (cy * cp);
+    f32 spy = sp * sy;
+
+    mRotMtx[0][0] = ((tmp) * sr + (cp * cr));
+    mRotMtx[1][0] = (sr * cy);
+    mRotMtx[2][0] = -(sp * cr) + (sy * cp * sr);
+    
+    mRotMtx[0][1] = ((-sr * cp) + (spy) * cr);
+    mRotMtx[1][1] = (cy * cr);
+    mRotMtx[2][1] = (sp * sr + sy * (cp * cr));
+
+    mRotMtx[0][2] = (cy * sp);
+    mRotMtx[1][2] = (-sy);
+    mRotMtx[2][2] = (cpy);
 }
 
 void TMapObjWanwan::jumpStart(JGeometry::TVec3f &vel, f32 s) {
@@ -500,6 +508,11 @@ f32 TMapObjWanwan::getCourseHeight(JGeometry::TVec3f &pos) {
     return mpGround->getHeight();
 }
 
+void TMapObjWanwan::fixPosition() {
+    mpGround->search(mPos);
+    mPos.y = mHeightOffset + mpGround->getHeight() - 0.1f;
+    mVel.y = 0.0f;
+}
 f32 TMapObjWanwan::getAngleToRand() {
     JGeometry::TVec3f posDiff, backPos;
     posDiff.sub(mObjData->position, mPos);
@@ -575,12 +588,11 @@ void TMapObjWanwan::calc() {
     chainCorrect();
 
     if (isTouchGround()) {
-        mpGround->search(mPos);
-        mPos.y = mHeightOffset + mpGround->getHeight() - 0.1f;
-        mVel.y = 0.0f;
+        fixPosition();
     }
     
     bool isWall = false;
+    // probably fixWall?
     mpGround->search(mPos, pos);
     if (mpGround->getAttribute() == CrsGround::Attr_2) {
         JGeometry::TVec3f wall;
@@ -658,7 +670,7 @@ void TMapObjWanwan::chainCorrect() {
 
     posDiff.sub(mPos, mObjData->position);
     posDiff.normalize();
-    posDiff.scaleAdd(50.0f, posDiff, mObjData->position);
+    posDiff.scaleAdd(80.0f, posDiff, mObjData->position);
     posDiff.y += 50.0f;
     mpStringNodeMgr->setNodePos(mNumChains - 1, posDiff);
     

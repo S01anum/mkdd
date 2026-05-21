@@ -14,9 +14,9 @@ public:
     J3DMtxCalc *mCalcAnm;       // 8
     int mAnmCnt;                // C
     u8 mBlendFrameCnt;          // 10
-    u8 _11;                     // 
-    s8 _12;                     //
-
+    u8 _11;                     // 11
+    s8 _12;                     // 12
+    s8 _13;                     // 13
 }; // Size: 0x14
 
 class TAnmPlayer

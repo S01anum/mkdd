@@ -1,24 +1,26 @@
 #ifndef JUGEMHEADITEM_H
 #define JUGEMHEADITEM_H
 
+#include "JSystem/JGeometry/Matrix.h"
 #include "Sato/GeographyObj.h"
+#include "Sato/J3DAnmObject.h"
+#include "types.h"
 
 class TJugemHeadItem : public GeographyObj {
 public:
-    TJugemHeadItem(u32 id) : GeographyObj(id) {
-        _14c = 0;
+    TJugemHeadItem(u32 id) : GeographyObj(id), mJugemParentPtr(nullptr) {
     }
     virtual ~TJugemHeadItem() {}
     virtual void calc() {} 
-    virtual void setPosition(const JGeometry::TVec3f &pos) { mPos.set(pos); } // 80
-    virtual void setRMtx(const JGeometry::TPos3f &rMtx) { mRotMtx.set(rMtx);  } // 84
+    virtual void setPosition(const JGeometry::TVec3f &pos); // 80
+    virtual void setRMtx(const JGeometry::TPos3f &rMtx); // 84
     virtual void hideModel(u32 p1) { mModel.clipAll(p1, false); } // 88
-    virtual void show() { mGeoObjFlag &= ~0x20; } // 8c
-    virtual void hide() { mGeoObjFlag |= 0x20; } // 90
+    virtual void show(u8); // 8c
+    virtual void hide(); // 90
     virtual void hideAll() { hide(); } // 94
 
-protected:
-    int _14c;
+public:
+    int mJugemParentPtr;
 };
 
 class TJugemHeadHear : public TJugemHeadItem {
@@ -43,7 +45,9 @@ public:
 
     static J3DAnmTevRegKey *sJugemHeadLampBrkAnm; // 0x80417018
     static J3DAnmTransform *sJugemHeadLampBcaAnm; // 0x8041701c
-    static J3DMtxCalc *sJugemHeadLampBcaMtxCalc; // 0x80417020
+    static J3DMtxCalc *sJugemHeadLampBcaMtxCalc;  // 0x80417020
+
+    J3DAnmObjMaterial _150;   // 150
 };
 
 #endif // JUGEMHEADITEM_H

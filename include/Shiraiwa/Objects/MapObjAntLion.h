@@ -5,7 +5,7 @@
 #include <JSystem/JKernel/JKRHeap.h>
 
 #include "Kaneshige/Course/CrsData.h"
-#include "Sato/GeographyObj.h"
+#include "Shiraiwa/Objects/MapObjHioNode.h"
 #include "Sato/StateObserver.h"
 
 #include "types.h"

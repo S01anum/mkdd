@@ -5,15 +5,28 @@
 #include "JSystem/JGeometry/Vec.h"
 #include "JSystem/JParticle/JPAEmitter.h"
 #include "Kaneshige/Course/CrsGround.h"
-#include "Sato/GeographyObj.h"
 #include "Sato/J3DAnmObject.h"
 #include "Sato/StateObserver.h"
 #include "Sato/StringObj.h"
 #include "Shiraiwa/Coord3D.h"
+#include "Shiraiwa/Objects/MapObjHioNode.h"
 #include "macros.h"
 #include "types.h"
 
 class TMapObjWanwan;
+
+inline f32 normalizeRelativeAngle(f32 angle, f32 min, f32 max) {
+    if (min >= max) {
+        return min;
+    }
+    for (; angle < min; angle += max - min) {
+    }
+
+    for (; angle >= max; angle -= max - min) {
+    }
+
+    return angle;
+}
 
 class TMapObjWanwanPile : public GeographyObj {
 public:
@@ -108,7 +121,7 @@ public:
     void fixChain(); // 0x80296efc
     void setChainPosition(TMapObjWanwanChain *, JGeometry::TVec3f &, JGeometry::TVec3f &, f32); // 0x802971a0
     void createEmitterOnGround(JPABaseEmitter **, const char *); // 0x802974bc
-    
+
     virtual void MoveExec(); // 0x80297450
     virtual void InitExec(); // 0x80296720
 
@@ -129,10 +142,10 @@ public:
     static J3DAnmCluster *sWanwanBlkAnmData; // 0x80416dec
     static int sChainJointNo; // 0x80416df0
     // Inline/Unused
-    //void fixPosition();
-    //void fixWall(JGeometry::TVec3f &, JGeometry::TVec3f &);
-    //void changeState_Wall(u32);
-    //void getAngleToKart();
+    void fixPosition();
+    void fixWall(JGeometry::TVec3f &, JGeometry::TVec3f &);
+    void changeState_Wall(u32);
+    void getAngleToKart();
     static int sWanwanChainNum;
     static f32 scChainHalfLength;
     // Inline

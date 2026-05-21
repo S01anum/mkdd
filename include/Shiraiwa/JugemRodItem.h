@@ -1,12 +1,15 @@
 #ifndef JUGEMRODSIGNAL_H
 #define JUGEMRODSIGNAL_H
 
+#include "JSystem/J3D/J3DAnmTexPattern.h"
+#include "JSystem/JGeometry/Vec.h"
 #include "JSystem/JKernel/JKRHeap.h"
-#include "JSystem/JGeometry.h"
 #include "JSystem/J3D/J3DModel.h"
 #include "JSystem/J3D/J3DAnmTevRegKey.h"
 #include "JSystem/JParticle/JPAEmitter.h"
+#include "Sato/AnmController.h"
 #include "Sato/GeographyObj.h"
+#include "Sato/J3DAnmObject.h"
 #include "Shiraiwa/AnmPlayer.h"
 
 // probably inherited from TJugemMain
@@ -15,14 +18,19 @@
 class TJugemRodItem : public GeographyObj
 {
 public:
-    TJugemRodItem(u32 id) : GeographyObj(id) {}
+    TJugemRodItem(u32 id) : GeographyObj(id) {
+        setObjFlagHidding();
+    }
     virtual ~TJugemRodItem() {}
-    virtual void setPosition(const JGeometry::TVec3f &rPos) { mPos.set(rPos); } // 80
-    virtual void setRMtx(const JGeometry::TPos3f &rMtx) { mRotMtx.set(rMtx); }  // 84
-    virtual void show() { mGeoObjFlag &= ~0x20; }                               // 88
-    virtual void hide() { mGeoObjFlag |= ~0x20; }                               // 8C
-    virtual void hideAll() { hide(); }                                          // 90
-    virtual void changeAnimation(int) {}                                        // 94
+    virtual void setPosition(const JGeometry::TVec3f &rPos) { mPos.set(rPos); }       // 80
+    virtual void setRMtx(const JGeometry::TPos3f &rMtx) { mRotMtx.set(rMtx.mMtx); }  // 84
+    virtual void show(u8);                   // 88
+    virtual void hide();                     // 8C
+    virtual void hideAll() { hide(); }       // 90
+    virtual void changeAnimation(int) {}     // 94
+
+    static const s32 cJugemRodItem_Max;
+    TAnmPlayer mAnmPlayer;
 };
 
 class TJugemRodSignal : public TJugemRodItem
@@ -42,7 +50,7 @@ public:
     void startCountDown();                                     // 0x80293c60
     void show(u8);                                             // 0x80293c74
     void update();                                             // 0x80293cac
-    void isAcceptEffect();                                     // 0x80293e74
+    bool isAcceptEffect();                                     // 0x80293e74
 
     // Inline/Unused
     void getJointPos(JGeometry::TVec3f *, long);
@@ -53,7 +61,7 @@ public:
 
     static const char *scRedParticleName;           // 0x80415160
     static const char *scGreenParticleName;         // 0x80415164
-    static J3DAnmTevRegKey **sJugemRodSignalBrkAnm; // 0x80416da8
+    static J3DAnmTevRegKey *sJugemRodSignalBrkAnm;  // 0x80416da8
     static s16 sRandomWait;                         // 0x80416dac
     static int sLeftJointNo;                        // 0x80416db0
     static int sMiddleJointNo;                      // 0x80416db4
@@ -61,9 +69,15 @@ public:
     static const u8 scSignalInterval;               // 0x8041c7d8
     static const u8 scRandomLength;                 // UNUSED
 
-    u8 _14c[0x188 - 0x14c];
-    u32 _188;
-    u8 _18c[0x19c - 0x18c];
+    J3DAnmObjMaterial _164;         // 164
+    bool _184;                      // 184
+    //u8 _185[0x188 - 0x185];       // 185 - Padding.
+    s32 _188;                       // 188
+    u8 mKartCamIndex;               // 18c
+    //u8 _18d[0x190 - 0x18d];       // 18d - Padding.
+    JPABaseEmitter *mEmitterLeft;   // 190
+    JPABaseEmitter *mEmitterMiddle; // 194
+    JPABaseEmitter *mEmitterRight;  // 198
 }; // Size: 0x19c
 
 class TJugemRodPukuPuku : public TJugemRodItem
@@ -80,15 +94,79 @@ public:
     void setPosition(const JGeometry::TVec3<float> &);
     void setRMtx(const JGeometry::TPos3f &);
     void setCurrentViewNo(u32);
-    void nodeCallBack(J3DJoint *, int);
+    static bool nodeCallBack(J3DJoint *, int);
+
+    const char *getBmdFileName() { return "/Objects/puku_model.bmd"; }
+    u32 getJ3DModelDataTevStageNum() const { return 0x20020; }
+
     // Inline/Unused
     void getCurMatrix(Mtx);
     // void scCutFrame;
-    // void sAnmInfos_Puku_Demo2;
-    // void sAnmInfos_Puku_Demo3;
-    // void sDemoAnmStateTable;
+    static TAnmInfo sAnmInfos_Puku_Demo2[3];
+    static TAnmInfo sAnmInfos_Puku_Demo3[1];
+    static TJugemAnmTableEntry sDemoAnmStateTable[3];
+
 private:
-    u8 _14c[0x174 - 0x14c];
+    AnmController *mAnmController[3];
+    u8 _170;    // 0x170
+    s8 _171;    // 0x171
 }; // Size: 0x174
+
+
+class TJugemRodBoard : public TJugemRodItem {
+public:
+    TJugemRodBoard();
+    ~TJugemRodBoard();
+    void reset();
+    void loadAnimation();
+    const char *getBmdFileName();
+    void createModel(JKRSolidHeap *, u32);
+    void show(u8);
+    void update();
+    void calc();
+
+
+    static J3DAnmTexPattern *sJugemRodBoardBtpAnm;
+    static const f32 scObjScale[4];
+
+
+    J3DAnmObjMaterial _164;
+};
+
+class TJugemRodBoard2 : public TJugemRodItem {
+public:
+    TJugemRodBoard2();
+    ~TJugemRodBoard2();
+    void reset();
+    void loadAnimation();
+    const char *getBmdFileName();
+    void createModel(JKRSolidHeap *, u32);
+    void show(u8);
+    void update();
+    void calc();
+
+    static J3DAnmTevRegKey *sJugemRodBoard2BrkAnm;
+    static const f32 scObjScale[4];
+
+    J3DAnmObjMaterial _164;
+};
+
+class TJugemRodBoardRev : public TJugemRodItem {
+public:
+    TJugemRodBoardRev();
+    ~TJugemRodBoardRev();
+    void reset();
+    void loadAnimation();
+    const char *getBmdFileName();
+    void createModel(JKRSolidHeap *, u32);
+    void show(u8);
+    void update();
+    void calc();
+
+    static J3DAnmTevRegKey *sJugemRodBoardRevBrkAnm;
+    static const f32 scObjScale[4];
+
+    J3DAnmObjMaterial _164;
+};
 
 #endif

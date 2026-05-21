@@ -94,17 +94,48 @@ namespace JGeometry {
             rDest.set(this->at(0,1), this->at(1, 1), this->at(2, 1));
         }
 
-        inline void getZDir(TVec3f &rDest) const {
+        inline void getZDir(TVec3f &rDest) const
+        {
             rDest.set(this->at(0, 2), this->at(1, 2), this->at(2, 2));
-        }
+        };
 
-        void getXYZDir(TVec3f &rDestX, TVec3f &rDestY, TVec3f &rDestZ) const;
-        void setXDir(const TVec3f &rSrc);
-        void setXDir(f32 x, f32 y, f32 z);
-        void setYDir(const TVec3f &rSrc);
-        void setYDir(f32 x, f32 y, f32 z);
-        void setZDir(const TVec3f &rSrc);
-        void setZDir(f32 x, f32 y, f32 z);
+        // From SMG
+        void setXDir(const TVec3f &param_1)
+        {
+            this->ref(0, 0) = param_1.x;
+            this->ref(1, 0) = param_1.y;
+            this->ref(2, 0) = param_1.z;
+        }
+        void setXDir(f32 x, f32 y, f32 z)
+        {
+            this->ref(0, 0) = x;
+            this->ref(1, 0) = y;
+            this->ref(2, 0) = z;
+        }
+        void setYDir(const TVec3f &param_1)
+        {
+            this->ref(0, 1) = param_1.x;
+            this->ref(1, 1) = param_1.y;
+            this->ref(2, 1) = param_1.z;
+        }
+        void setYDir(f32 x, f32 y, f32 z)
+        {
+            this->ref(0, 1) = x;
+            this->ref(1, 1) = y;
+            this->ref(2, 1) = z;
+        }
+        void setZDir(const TVec3f &param_1)
+        {
+            this->ref(0, 2) = param_1.x;
+            this->ref(1, 2) = param_1.y;
+            this->ref(2, 2) = param_1.z;
+        }
+        void setZDir(f32 x, f32 y, f32 z)
+        {
+            this->ref(0, 2) = x;
+            this->ref(1, 2) = y;
+            this->ref(2, 2) = z;
+        }
         void setXYZDir(const TVec3f &rSrcX, const TVec3f &rSrcY, const TVec3f &rSrcZ)
         {
             this->ref(0, 0) = rSrcX.x;
@@ -122,6 +153,34 @@ namespace JGeometry {
         void getEulerXYZ(TVec3f &rDest) const;
         void setEulerY(f32 val);
         void setEulerZ(f32 val);
+
+        void setEulerXYZ(const TVec3f &rSrc);
+
+        void setEulerXYZ(f32 x, f32 y, f32 z) { // fabricated? might actually exist
+            f32 cr = std::cosf(x); // f26
+            f32 cp = std::cosf(y); // f31
+            f32 cy = std::cosf(z); // f30
+            f32 sr = std::sinf(x);   // f29
+            f32 sp = std::sinf(y); // f28
+            f32 sy = std::sinf(z); // f7
+
+            // ???
+            f32 tmp = sy * sp;
+            f32 cpy = (cy * cp);
+            f32 spy = sp * sy;
+
+            this->mMtx[0][0] = ((tmp) * sr + (cp * cr));
+            this->mMtx[1][0] = (sr * cy);
+            this->mMtx[2][0] = -(sp * cr) + (sy * cp * sr);
+            
+            this->mMtx[0][1] = ((-sr * cp) + (spy) * cr);
+            this->mMtx[1][1] = (cy * cr);
+            this->mMtx[2][1] = (sp * sr + sy * (cp * cr));
+
+            this->mMtx[0][2] = (cy * sp);
+            this->mMtx[1][2] = (-sy);
+            this->mMtx[2][2] = (cpy);
+        }
 
         void getQuat(TQuat4f &rDest) const { // Non matching
             f32 z,y,x;
@@ -176,7 +235,57 @@ namespace JGeometry {
             }
         }
 
-        void setQuat(const TQuat4f &rSrc);
+        void setQuat(const TQuat4f &q) {
+            f32 yy = 2.0f * q.y * q.y;
+            f32 zz = 2.0f * q.z * q.z;
+            f32 xx = 2.0f * q.x * q.x;
+
+            f32 xy = 2.0f * q.x * q.y;
+            f32 xz = 2.0f * q.x * q.z;
+            f32 yz = 2.0f * q.y * q.z;
+
+            f32 wx = 2.0f * q.w * q.x;
+            f32 wy = 2.0f * q.w * q.y;
+            f32 wz = 2.0f * q.w * q.z;
+
+            this->mMtx[0][0] = 1.0f - yy - zz;
+            this->mMtx[0][1] = xy - wz;
+            this->mMtx[0][2] = xz + wy;
+
+            this->mMtx[1][0] = xy + wz;
+            this->mMtx[1][1] = 1.0f - xx - zz;
+            this->mMtx[1][2] = yz - wx;
+
+            this->mMtx[2][0] = xz - wy;
+            this->mMtx[2][1] = yz + wx;
+            this->mMtx[2][2] = 1.0f - xx - yy;
+        }
+
+        void makeMtx(MtxPtr pMtx) const {
+            f32 yy = 2.0f * this->y * this->y;
+            f32 zz = 2.0f * this->z * this->z;
+            f32 xx = 2.0f * this->x * this->x;
+
+            f32 xy = 2.0f * this->x * this->y;
+            f32 xz = 2.0f * this->x * this->z;
+            f32 yz = 2.0f * this->y * this->z;
+
+            f32 wx = 2.0f * this->w * this->x;
+            f32 wy = 2.0f * this->w * this->y;
+            f32 wz = 2.0f * this->w * this->z;
+
+            pMtx[0][0] = 1.0f - yy - zz;
+            pMtx[0][1] = xy - wz;
+            pMtx[0][2] = xz + wy;
+
+            pMtx[1][0] = xy + wz;
+            pMtx[1][1] = 1.0f - xx - zz;
+            pMtx[1][2] = yz - wx;
+
+            pMtx[2][0] = xz - wy;
+            pMtx[2][1] = yz + wx;
+            pMtx[2][2] = 1.0f - xx - yy;
+        }
 
         void getScale(TVec3f &rDest) const;
         void setScale(const TVec3f &rSrc);
@@ -186,6 +295,27 @@ namespace JGeometry {
 
         void mult33(TVec3f &) const;
         void mult33(const TVec3f &, TVec3f &) const;
+
+        inline void getXDirInline(TVec3f &rDest) const {
+            f32 z = this->mMtx[2][0];
+            f32 y = this->mMtx[1][0];
+            f32 x = this->mMtx[0][0];
+            rDest.set(x, y, z);
+        }
+
+        inline void getYDirInline(TVec3f &rDest) const {
+            f32 z = this->mMtx[2][1];
+            f32 y = this->mMtx[1][1];
+            f32 x = this->mMtx[0][1];
+            rDest.set(x, y, z);
+        }
+
+        inline void getZDirInline(TVec3f &rDest) const {
+            f32 z = this->mMtx[2][2];
+            f32 y = this->mMtx[1][2];
+            f32 x = this->mMtx[0][2];
+            rDest.set(x, y, z);
+        }
 
 #ifdef NON_MATCHING
         inline void mult33Inline(const TVec3f &rSrc, TVec3f &rDest) const
@@ -208,9 +338,14 @@ namespace JGeometry {
         void getTrans(TVec3f &rDest) const {
             rDest.set(this->at(0, 3), this->at(1, 3), this->at(2, 3));
         }
-
-        void setTrans(const TVec3f &rSrc);
-        void setTrans(f32 x, f32 y, f32 z);
+        void setTrans(const TVec3<f32>& translation) {
+            setTrans(translation.x, translation.y, translation.z);
+        }
+        void setTrans(f32 x, f32 y, f32 z) {
+            this->ref(0, 3) = x;
+            this->ref(1, 3) = y;
+            this->ref(2, 3) = z;
+        }
         void zeroTrans()
         {
             this->ref(0, 3) = 0.0f;
@@ -241,7 +376,15 @@ namespace JGeometry {
             this->ref(1, 3) = (rLookAt[0][3] * this->mMtx[1][0]) - (rLookAt[1][3] * this->mMtx[1][1]) + rLookAt[2][3] * this->mMtx[1][2];
             this->ref(2, 3) = (rLookAt[0][3] * this->mMtx[2][0]) - (rLookAt[1][3] * this->mMtx[2][1]) + rLookAt[0][3] * this->mMtx[2][2];
         }
+
         void setQT(const TQuat4f &rSrcQuat, const TVec3f &rSrcTrans);
+
+        inline void getTransInline(TVec3f &rDest) const {
+            f32 z = this->mMtx[2][3];
+            f32 y = this->mMtx[1][3];
+            f32 x = this->mMtx[0][3];
+            rDest.set(x, y, z);
+        }
     };
 
     typedef TMatrix34<TSMtxf> TMtx34f;
