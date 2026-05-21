@@ -42,15 +42,9 @@ const char *TJugemFlag::getBmdFileName() {
 
 void TJugemFlag::createModel(JKRSolidHeap *jkrSolidHeap, u32 param_2) {
     mModel.createModel(jkrSolidHeap, param_2, false);
-    AnmController *anmCtrl = mAnmCtrl;
-    anmCtrl->mTrans = new AnmControlTrans();
-    AnmControlTrans *anmCtrlTrans = anmCtrl->mTrans;
-
-    anmCtrlTrans->initAnm(1, &mModel);
-    mAnmCtrl->mTrans->registration(0, sJugemFlagBckAnmTrans, sJugemFlagBckMtxCalc);
-    anmCtrlTrans = mAnmCtrl->mTrans;
-
-    anmCtrlTrans->getFrameCtrl(0)->setAttribute(2);
+    getAnmCtrl()->InitRegistration(1, &mModel);
+    getAnmCtrl()->RegisterTrans(0, sJugemFlagBckAnmTrans, sJugemFlagBckMtxCalc);
+    getAnmCtrl()->getFrameCtrl(0)->setAttribute(2);
 }
 
 void TJugemFlag::createColModel(J3DModelData *j3dModelData) {}

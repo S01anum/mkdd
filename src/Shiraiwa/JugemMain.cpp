@@ -1,7 +1,6 @@
 #include "JSystem/J3D/J3DJoint.h"
 #include "JSystem/J3D/J3DModel.h"
 #include "JSystem/J3D/J3DSys.h"
-#include "JSystem/JAudio/JASFakeMatch2.h"
 #include "JSystem/JGeometry/Matrix.h"
 #include "JSystem/JGeometry/Quat.h"
 #include "JSystem/JGeometry/Util.h"
@@ -691,11 +690,6 @@ void TJugem::localMove(JGeometry::TVec3f *vec) {
     }
 
     static JGeometry::TQuat4f qtAxisY;
-    // FIX: Is some init code missing from the quaternion implementation?
-    // static s8 init;
-    // if (!init) {
-    //     init = 1;
-    // }
 
     f32 dx = vec->x - _22c.x;
     f32 dz = vec->z - _22c.z;
