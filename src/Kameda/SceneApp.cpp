@@ -30,6 +30,10 @@ SceneApp::SceneApp() : GameApp(0x0200000, "Scene", nullptr) {
     _60 = 0;
 }
 
+SceneApp::~SceneApp() {
+    SceneApp::mspSceneApp = nullptr;
+}
+
 void SceneApp::draw() {
     if (_5C < Scene::SCENE_MAX && _5C >= Scene::SCENE_TITLE) {
         return;
@@ -91,8 +95,4 @@ void SceneApp::calc() {
             break;
         }
     }
-}
-
-SceneApp::~SceneApp() {
-    SceneApp::mspSceneApp = nullptr;
 }
