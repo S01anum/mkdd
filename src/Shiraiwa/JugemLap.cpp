@@ -1,3 +1,4 @@
+#include "JSystem/JAudio/JASFakeMatch2.h"
 #include "Kaneshige/RaceMgr.h"
 #include "Sato/AnmController.h"
 #include "Shiraiwa/JugemMain.h"

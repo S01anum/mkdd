@@ -1,6 +1,7 @@
 #include "JSystem/J3D/J3DJoint.h"
 #include "JSystem/J3D/J3DModel.h"
 #include "JSystem/J3D/J3DSys.h"
+#include "JSystem/JAudio/JASFakeMatch2.h"
 #include "JSystem/JGeometry/Matrix.h"
 #include "JSystem/JGeometry/Quat.h"
 #include "JSystem/JGeometry/Util.h"
