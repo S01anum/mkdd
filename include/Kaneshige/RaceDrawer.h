@@ -52,6 +52,8 @@ public:
     void setBlurDecrease(u8 a) { mBlurDecrease = a; }
     void setBlurColor(const JUTColor &color) { mBlurColor.set(color);  }
 
+    u8 getKartNum() { return mKartNum; }
+
     DrawBuffer *getItemDrawBuffer(int kartNo) {
 #line 163
         JUT_MINMAX_ASSERT(-1, kartNo, 8)

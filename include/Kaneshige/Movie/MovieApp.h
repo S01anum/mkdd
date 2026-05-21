@@ -48,6 +48,9 @@ public:
 
     static MovieApp *getMovieApp() { return sMovieApp; }
 
+    // Inline
+    MdlViewer *getMdlViewer() { return mMdlViewer; }
+
 private:
     static MovieApp *sMovieApp; // 0x80416840
     static void *mspHeapBuffer; // 0x80416844

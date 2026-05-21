@@ -33,6 +33,7 @@ public:
     bool tstFlgAnmStop() const { return mFlags & 1; }
     bool tstFlgAnm2() const { return mFlags & 2; }
     void resetFlag() { mFlags &= ~1; }
+    void setFlag() { mFlags |= 1; }
 
     u8 mFlags;                     // 4
     u8 mMaxAnmNo;                  // 5
