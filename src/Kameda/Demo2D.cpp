@@ -5,6 +5,8 @@
 
 #include <JSystem/JAudio/JASFakeMatch2.h>
 
+Demo2DParam::Demo2DParam() : _48(0), _4A(1) {}
+
 Demo2D::Demo2D(JKRHeap *heap) {
     mNode = new (heap, 0) Demo2DHioNode();
     mOrtho = System::getJ2DOrtho();
@@ -15,6 +17,11 @@ Demo2D::Demo2D(JKRHeap *heap) {
 }
 
 void Demo2D::init() {}
+
+Demo2D::~Demo2D() {
+    delete mNode;
+    delete mScreen;
+}
 
 void Demo2D::draw() {
     if ((mNode->mParam._4A & 1) && RCMGetManager()->isWaitDemoMode()) {
@@ -27,5 +34,5 @@ void Demo2D::draw() {
 void Demo2D::calc() {
     // stub?
     if (mNode->mParam._4A & 1)
-    return;
+        return;
 }

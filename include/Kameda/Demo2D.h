@@ -8,7 +8,7 @@ class J2DScreen;
 
 class Demo2DParam : public JORReflexible {
 public:
-    Demo2DParam() : _48(0), _4A(1) {}
+    Demo2DParam();
     virtual ~Demo2DParam() {}
 
     u16 _48;
