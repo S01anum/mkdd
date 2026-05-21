@@ -14,6 +14,7 @@
 #include "Sato/ItemObj.h"
 #include "Sato/ObjCollision.h"
 #include "Sato/stMath.h"
+#include "Shiraiwa/AnmPlayer.h"
 
 // TODO: Remove Forward declarations
 class ObjColBase; // ObjCollision.h
@@ -35,6 +36,12 @@ private:
 struct GeoAnmTableEntry {
     u32 _0; // unused?
     const char *fileName;
+};
+
+// TODO: This pattern may apply elsewhere... look for better place for it to exist.
+struct TJugemAnmTableEntry {
+    TAnmInfo *tAnmInfo;
+    u8 arraySize;
 };
 
 class GeoObjSupervisor
@@ -114,9 +121,9 @@ public:
     bool IsPathMove() const { return mObjData->pathID != 0xffff; }
 
     template<class T>
-    static T *New(CrsData::SObject &object) { return new T(object); }
+    static T *New(const CrsData::SObject &object) { return new T(object); }
     template<class T>
-    static T *NewS(CrsData::SObject &object) { return new T(object); }
+    static T *NewS(const CrsData::SObject &object) { return new T(object); }
 
     void NewAnmCtrl() {
         if (mAnmCtrl == nullptr) {
@@ -266,7 +273,8 @@ public:
     u16 mIsHitKartSoundPlayedFlg;         // FA
     JSULink<GeographyObj> mObjLink;       // FC
     int mKind;                            // 10C
-    u8 _110[0x114 - 0x110];               //
+    u16 _110;                             // 110
+    u16 _112;                             // 112
     ItemObj *mColItemObj;                 // 114
     ShadowModel *mShadowMdl;              // 118
     u16 mObjFlag;                         // 11C
@@ -299,7 +307,7 @@ public:
     virtual void lockDisplayList() {}
 
     template<class T>
-    static T *ExNew(CrsData::SObject &object) { return new T(object); }
+    static T *ExNew(const CrsData::SObject &object) { return new T(object); }
 
     ExObjColBase *getExBounds() const { return mExBounds; }
 
