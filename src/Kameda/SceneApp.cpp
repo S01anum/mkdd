@@ -56,31 +56,41 @@ void SceneApp::draw() {
 
 }
 
-//https://decomp.me/scratch/XESq4
 void SceneApp::calc() {
-    if (_5C < Scene::SCENE_MAX && (_5C >= Scene::SCENE_TITLE)) {
-        AppMgr::deleteCurrentApp();
-
-        SequenceApp::call(_5C);
-        return;
-    } else if (gGamePad1P.testTrigger(KartGamePad::A)) {
-        GameAudio::Main::getAudio()->startSystemSe(0x20002);
-        _5C = (Scene::SceneType)_60;
-        return;
-    } else if (gGamePad1P.testTrigger(KartGamePad::B)) {
-        GameAudio::Main::getAudio()->startSystemSe(0x20004);
-        AppMgr::deleteCurrentApp();
-        MainMenuApp::call();
-        return;
-    } else if (gGamePad1P.testRepeat(KartGamePad::MAINSTICK_UP)) {
-        GameAudio::Main::getAudio()->startSystemSe(0x20000);
-        _60  = (_60 + 9) % 10;
-        return;
-    } else if (gGamePad1P.testRepeat(KartGamePad::MAINSTICK_DOWN)) {
-        GameAudio::Main::getAudio()->startSystemSe(0x20000);
-        _60  = ( _60 + 11) % 10;
+    switch (_5C) {
+        case Scene::SCENE_TITLE:
+        case Scene::SCENE_MENU:
+        case Scene::SCENE_OPTION:
+        case Scene::SCENE_COURSE:
+        case Scene::SCENE_MAP_SELECT:
+        case Scene::SCENE_RECORD:
+        case Scene::SCENE_GP_NEXT:
+        case Scene::SCENE_GHOST_LOAD_SAVE:
+        case Scene::SCENE_LAN_ENTRY:
+        case Scene::SCENE_SECRET:
+            {
+            AppMgr::deleteCurrentApp();
+            SequenceApp::call(_5C);
+            break;
+        }
+        default: {
+            if (gGamePad1P.testTrigger(KartGamePad::A)) {
+                GameAudio::Main::getAudio()->startSystemSe(0x20002);
+                _5C = (Scene::SceneType)_60;
+            } else if (gGamePad1P.testTrigger(KartGamePad::B)) {
+                GameAudio::Main::getAudio()->startSystemSe(0x20004);
+                AppMgr::deleteCurrentApp();
+                MainMenuApp::call();
+            } else if (gGamePad1P.testRepeat(KartGamePad::MAINSTICK_UP)) {
+                GameAudio::Main::getAudio()->startSystemSe(0x20000);
+                _60  = (_60 + 9) % 10;
+            } else if (gGamePad1P.testRepeat(KartGamePad::MAINSTICK_DOWN)) {
+                GameAudio::Main::getAudio()->startSystemSe(0x20000);
+                _60  = ( _60 + 11) % 10;
+            }
+            break;
+        }
     }
-
 }
 
 SceneApp::~SceneApp() {
