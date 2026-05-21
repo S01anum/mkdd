@@ -56,7 +56,7 @@ public:
     virtual void setCurrentViewNo(u32);                               // 0x801a5614
 
     // Inlines
-    const Mtx &getBaseTRMtx() { return mBaseTRMtx.mMtx; }
+    const Mtx &getBaseTRMtx() { return mBaseTRMtx; }
     void hide(u32 p1) { clipAll(p1, false); }
     void show(u32 p1) { clipAll(p1, true); }
     bool isAllShapePacketHidding(u32 viewNo) { return isAllShapePacketHidding(0, viewNo); }
@@ -97,7 +97,7 @@ public:
     u16 _1a;                      // 1A
     u16 mSimpleTevReg;            // 1C
     JGeometry::TVec3f mScale;     // 20
-    JGeometry::TPos3f mBaseTRMtx; // 2C
+    Mtx mBaseTRMtx;               // 2C
     Mtx _5c;                      // 5C
 }; // Size: 0x8c
 
