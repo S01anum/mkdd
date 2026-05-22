@@ -464,15 +464,6 @@ void TJugem::getZDir(int param_1, JGeometry::TVec3f *vecZDir) {
     _238.set(kartZDir);
 }
 
-// TODO: Once we work out correct JGeometry implementations for TRot3f and TQuat4f,
-//      this template below can be uncommented and adjusted as needed.
-// template <>
-// inline void JGeometry::TRot3f::setRotate(const TVec3f &a, const TVec3f &b) {
-//     TQuat4f q;
-//     q.setRotate(a, b);
-//     setQuat(q);
-// }
-
 void TJugem::resetJugemOrigin(const JGeometry::TVec3f &param_1, const JGeometry::TVec3f &param_2) {
     JGeometry::TVec3f jugemOrigin;
     JGeometry::TVec3f newPos;
@@ -592,7 +583,7 @@ void TJugem::move(int kartIndex) {
 
     if (getGlobalState() == 1) {
         if (checkKartCrash()) {
-            mRotMtx.getZDirInline(local_d4);
+            mRotMtx.getZDir(local_d4);
         } else {
             ObjUtility::getKartVel(mKartNum, &local_f8);
             if (local_f8.dot(local_d4) >= 0.0f) {
@@ -605,7 +596,7 @@ void TJugem::move(int kartIndex) {
                 local_d4.add(local_f8, local_104);
                 local_d4.negate();
             } else {
-                mRotMtx.getZDirInline(local_d4);
+                mRotMtx.getZDir(local_d4);
             }
         }
     } else {
@@ -831,8 +822,9 @@ void TJugem::fixWall(CrsGround &crsGround, JGeometry::TVec3f *pos) {
     const f32 step = 80.0f;
     const f32 stepHalf = 40.0f;
 
-    int steps = dir.normalize() / step;
+    f32 norm = dir.normalize();
     dir.scale(step);
+    int steps = norm / step;
 
     if (steps > 0x14) {
         steps = 0x14;
@@ -847,10 +839,10 @@ void TJugem::fixWall(CrsGround &crsGround, JGeometry::TVec3f *pos) {
     JGeometry::TVec3f next;
 
     for (s32 i = steps; i >= 0; i--) {
-        JMAVECScaleAdd(&dir, pos, &cur, i);
+        cur.scaleAdd(i, dir, *pos);
         cur.y  = heightStep * (steps - i) + _22c.y;
 
-        JMAVECScaleAdd(&dir, pos, &next, i + 1);
+        next.scaleAdd(i + 1, dir, *pos);
         next.y = heightStep * (steps - i - 1) + _22c.y;
 
         crsGround.search(cur);
@@ -1134,7 +1126,7 @@ bool TJugem::nodeCallBack(J3DJoint* joint, int param_2) {
 
 void TJugem::setCameraNum(u8 cam) {
     #line 1520
-    JUT_ASSERT_MSG(cam < scJugemCameraMax, "cam < scJugemCameraMax");
+    JUT_ASSERT(cam < scJugemCameraMax);
     mCameraNum = cam;
     if (mSignal != nullptr) {
         mSignal->mKartCamIndex = mCameraNum;
@@ -1142,9 +1134,9 @@ void TJugem::setCameraNum(u8 cam) {
 }
 
 void TJugem::setKartNum(u8 kart) {
-    #line 1530
+    #line 1531
     u8 scJugemKartMax = 8;
-    JUT_ASSERT_MSG(kart < scJugemKartMax, "kart < scJugemKartMax");
+    JUT_ASSERT(kart < scJugemKartMax);
     mKartNum = kart;
 }
 
@@ -1153,7 +1145,7 @@ u32 TJugem::getScreenType() {
     s32 screenType = 0;
 
     #line 1711
-    JUT_ASSERT_MSG(consoleNum > 0, "consoleNum > 0");
+    JUT_ASSERT(consoleNum > 0);
 
     // TODO: See if this can become an enum.
     switch (consoleNum) {
@@ -1169,7 +1161,7 @@ u32 TJugem::getScreenType() {
             break;
         default:
             #line 1725
-            JUT_ASSERT_MSG(false, "false");
+            JUT_ASSERT(false);
             break;
     }
     return screenType;
