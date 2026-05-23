@@ -7,6 +7,8 @@
 #include "Kaneshige/RaceMgr.h"
 #include "Sato/GeographyObj.h"
 #include "Sato/GeographyObjMgr.h"
+#include "Sato/ItemObjMgr.h"
+#include "Sato/ItemTurtle.h"
 #include "Sato/JPEffectPerformer.h"
 #include "Shiraiwa/TKartThrower.h"
 #include "Yamamoto/kartCtrl.h"
@@ -559,9 +561,28 @@ void KartCrash::MakeThunderSpin() {
     }
 }
 
-void KartCrash::MakeBurn(ItemObj *) { 
-    // void ItemFireBall::IsEfctTypeRed() const {}
-    // void ItemObj::getItemColorID() const {}
+//https://decomp.me/scratch/ynjMy
+void KartCrash::MakeBurn(ItemObj *itemObj) {
+    KartBody* body = mBody;
+    u32 num = body->mMynum;
+    ItemObjMgr* mgr = GetItemObjMgr();
+
+    ItemObjMgr::KartHitList* list = mgr->getKartHitList(num);
+    if (body->getChecker()->CheckCrash() != true) {
+        ItemObj* fireBallObj = list->mObjects[10];
+        if (fireBallObj != nullptr) {
+            JGeometry::TVec3f stack_8;
+            stack_8.set(body->mPlayerPosMtx[0][3], body->mPlayerPosMtx[1][3], body->mPlayerPosMtx[2][3]);
+            GetKartCtrl()->getKartSound(body->mMynum)->DoHitFireBall();
+            ItemFireBall* fireBall = (ItemFireBall*)mgr->getItemFireBall(fireBallObj);
+
+            JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Fireball, num, stack_8, (u8)(!fireBall->IsEfctTypeRed()));
+        }
+        MakeSpin(nullptr);
+        body->getDamage()->mFlags |= 0x80;
+        body->getDamage()->SetBurnAnime();
+        body->getGame()->ItemWatchMan(itemObj);
+    }
 }
 
 void KartCrash::MakeFreezeCrash() {}

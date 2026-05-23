@@ -5,7 +5,7 @@
 #include "Yamamoto/kartSus.h"
 #include "types.h"
 
-class KartBody;
+class ItemObjMgr;
 
 class KartGame
 {

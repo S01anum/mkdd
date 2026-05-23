@@ -21,7 +21,8 @@ public:
         Effect_UnknownF = 0xF,
         Effect_Unknown12 = 0x12,    // Star react.
         Effect_Burn = 0x13,
-        Effect_Star = 0x1c
+        Effect_Star = 0x1c,
+        Effect_Fireball = 0x24,
     };
 
     void init();                                                       // 80266010
