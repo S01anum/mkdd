@@ -13,6 +13,7 @@ public:
         // TODO
         Effect_Unknown0 = 0x0,
         Effect_Unknown1 = 0x1,
+        Effect_Unknown2 = 0x2,
         Effect_Unknown4 = 0x4,      // Something collision related...?
         Effect_Unknown5 = 0x5,      // Sound of some material...?
         Effect_Unknown6 = 0x6,      // Something reflection related...?

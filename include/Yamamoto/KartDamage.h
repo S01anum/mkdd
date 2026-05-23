@@ -28,7 +28,7 @@ public:
     void MakeBurnDamage();          // 0x80307728
     void DoDamageCrl();             // 0x80307778
     // Inline/Unused
-    // void SetThunderDamageAnime();
+    //void SetThunderDamageAnime() {mFlags |= 0x80; }
     // void DoAfterDamageCrl();
     KartBody *mBody; // 0
     u16 mFlags;      // 4

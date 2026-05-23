@@ -10,6 +10,7 @@
 #include "Sato/JPEffectPerformer.h"
 #include "Shiraiwa/TKartThrower.h"
 #include "Yamamoto/kartCtrl.h"
+#include "types.h"
 
 // comments inside functions are inline functions being called in that function
 
@@ -354,11 +355,11 @@ void KartCrash::DotornadeCrashCrl() {
             f32 cnvge_4ac = body->_4ac;
 
             if (cnvge_4ac > 10.0f) {
-                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.069777697, 0.0069777598, 0.0069777598);
+                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.069777697f, 0.0069777598f, 0.0069777598f);
             } else {
-                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.33, 0.0348888, 0.0348888);
+                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.33f, 0.0348888f, 0.0348888f);
             }
-            cnvge_4ac = GetKartCtrl()->fcnvge(cnvge_4ac, 18.84, body->_4b0, body->_4b0);
+            cnvge_4ac = GetKartCtrl()->fcnvge(cnvge_4ac, 18.84f, body->_4b0, body->_4b0);
             if (body->_4a8 < 0.0f) {
                 body->mWg.y = -(cnvge_4ac - body->_4ac) / body->mSpeedScale;
             } else {
@@ -403,15 +404,160 @@ void KartCrash::DotornadeCrashCrl() {
     body->getStrat()->MovingTornadeClear();
 }
 
-void KartCrash::MakeSpin(ItemObj *) {}
+void KartCrash::MakeSpin(ItemObj *itemObj) {
+    KartBody* body = mBody;
+    u32 num = body->mMynum;
 
-void KartCrash::DoSpinCrashCrl() {}
+    if (body->getChecker()->CheckCrash() != true) {
+        if (body->mTireAngle == 0.0f) {
+            JGeometry::TVec3f stack_8;
+            GetKartCtrl()->DevMatrixByVector(&stack_8, &body->_2cc, body->_110);
+            if (stack_8.x < 0.0f) {
+                body->_4a8 = -0.0174444f;
+            } else {
+                body->_4a8 = 0.0174444f;
+            }
+        } else if (body->mTireAngle < 0.0f) {
+            body->_4a8 = 0.0174444f;
+        } else {
+            body->_4a8 = -0.0174444f;
+        }
+        body->_4b0 = body->_4ac = 0.0f;
+        body->_584 = 1;
+        body->_588 = 0;
+        body->mCarStatus |= 0x180000;
+        if ((body->getThunder()->mFlags & 1) == 0) {
+            if (body->_4a8 < 0.0f) {
+                JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1, num, body->mPos, 1);
+            } else {
+                JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1, num, body->mPos, 0);
+            }
+        }
+        body->getGame()->MakeClear();
+        body->getDamage()->SetDamageAnime();
+        body->getItem()->FallItem();
+        GetKartCtrl()->getKartSound(num)->DoSpinVoice();
+        body->getStrat()->DoMotor(MotorManager::MotorType_9);
+        body->getGame()->ItemWatchMan(itemObj);
+        SetMatchlessTimer();
+        DoPointBomb(itemObj);
+    }
+}
 
-void KartCrash::MakeHalfSpin(ItemObj *) {}
+void KartCrash::DoSpinCrashCrl() {
+    KartBody* body = mBody;
+    switch (body->_588) {
+        case 0:
+            f32 cnvge_4ac = body->_4ac;
 
-void KartCrash::DoHalfSpinCrashCrl() {}
+            if (cnvge_4ac > 10.0f) {
+                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.0697777f, 0.00348888f, 0.00348888f);
+            } else {
+                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.33f, 0.0174444f, 0.0174444f);
+            }
+            cnvge_4ac = GetKartCtrl()->fcnvge(cnvge_4ac, 12.56f, body->_4b0, body->_4b0);
+            if (body->_4a8 < 0.0f) {
+                body->mWg.y = -(cnvge_4ac - body->_4ac) / body->mSpeedScale;
+            } else {
+                body->mWg.y = (cnvge_4ac - body->_4ac) / body->mSpeedScale;
+            }
+            body->_4ac = cnvge_4ac;
+            GetKartCtrl()->getKartSound(body->mMynum)->DoSpinSound();
+            cnvge_4ac = 0.0f;
+            if (body->_4ac > 12.55f) {
+                for (s32 i = 0; i < 4; i++) {
+                    body->getSus(i)->_10c = cnvge_4ac;
+                    body->getSus(i)->_110 = cnvge_4ac;
+                }
+                body->getStrat()->MovingSpinClear();
+            }
+            return;
+        default:
+            body->getStrat()->MovingSpinClear();
+    }
+}
 
-void KartCrash::MakeThunderSpin() {}
+void KartCrash::MakeHalfSpin(ItemObj *itemObj) {
+    KartBody* body = mBody;
+    u32 num = body->mMynum;
+
+    if (body->getChecker()->CheckCrash() != true) {
+        if (body->mTireAngle == 0.0f) {
+            JGeometry::TVec3f stack_8;
+            GetKartCtrl()->DevMatrixByVector(&stack_8, &body->_2cc, body->_110);
+            if (stack_8.x < 0.0f) {
+                body->_4a8 = -0.0174444f;
+            } else {
+                body->_4a8 = 0.0174444f;
+            }
+        } else if (body->mTireAngle < 0.0f) {
+            body->_4a8 = -0.0174444f;
+        } else {
+            body->_4a8 = 0.0174444f;
+        }
+        body->_4b0 = body->_4ac = 0.0f;
+        body->_584 = 7;
+        body->_588 = 0;
+        body->mCarStatus |= 0x1100000;
+        if ((body->getThunder()->mFlags & 1) == 0) {
+            if (body->_4a8 < 0.0f) {
+                JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown2, num, body->mPos, 1);
+            } else {
+                JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown2, num, body->mPos, 0);
+            }
+        }
+        body->getGame()->MakeClear();
+        body->getDamage()->SetDamageAnime();
+        body->getItem()->FallItem();
+        GetKartCtrl()->getKartSound(num)->DoSpinVoice();
+        body->getStrat()->DoMotor(MotorManager::MotorType_9);
+        body->getGame()->ItemWatchMan(itemObj);
+        SetMatchlessTimer();
+    }
+}
+
+void KartCrash::DoHalfSpinCrashCrl() {
+    KartBody* body = mBody;
+    switch (body->_588) {
+        case 0:
+            f32 cnvge_4ac = body->_4ac;
+
+            if (cnvge_4ac > 5.0f) {
+                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.1046666f, 0.0174444f, 0.0174444f);
+            } else {
+                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.174444f, 0.0174444f, 0.0174444f);
+            }
+            cnvge_4ac = GetKartCtrl()->fcnvge(cnvge_4ac, 6.28f, body->_4b0, body->_4b0);
+            if (body->_4a8 < 0.0f) {
+                body->mWg.y = -(cnvge_4ac - body->_4ac) / body->mSpeedScale;
+            } else {
+                body->mWg.y = (cnvge_4ac - body->_4ac) / body->mSpeedScale;
+            }
+            body->_4ac = cnvge_4ac;
+            GetKartCtrl()->getKartSound(body->mMynum)->DoSpinSound();
+            cnvge_4ac = 0.0f;
+            if (body->_4ac > 6.17f) {
+                for (s32 i = 0; i < 4; i++) {
+                    body->getSus(i)->_10c = cnvge_4ac;
+                    body->getSus(i)->_110 = cnvge_4ac;
+                }
+                body->getStrat()->MovingHalfSpinClear();
+                body->mTireAngle = 0;
+            }
+            return;
+        default:
+            body->getStrat()->MovingHalfSpinClear();
+    }
+}
+
+void KartCrash::MakeThunderSpin() {
+    KartBody* body = mBody;
+    if (body->getChecker()->CheckCrash() != true) {
+        MakeSpin(nullptr);
+        body->getDamage()->mFlags |= 0x80;
+        body->getDamage()->SetBurnAnime();
+    }
+}
 
 void KartCrash::MakeBurn(ItemObj *) { 
     // void ItemFireBall::IsEfctTypeRed() const {}
