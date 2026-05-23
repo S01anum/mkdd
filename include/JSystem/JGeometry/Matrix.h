@@ -169,17 +169,17 @@ namespace JGeometry {
             f32 cpy = (cy * cp);
             f32 spy = sp * sy;
 
-            this->mMtx[0][0] = ((tmp) * sr + (cp * cr));
-            this->mMtx[1][0] = (sr * cy);
-            this->mMtx[2][0] = -(sp * cr) + (sy * cp * sr);
+            this->ref(0, 0) = ((tmp) * sr + (cp * cr));
+            this->ref(1, 0) = (sr * cy);
+            this->ref(2, 0) = -(sp * cr) + (sy * cp * sr);
             
-            this->mMtx[0][1] = ((-sr * cp) + (spy) * cr);
-            this->mMtx[1][1] = (cy * cr);
-            this->mMtx[2][1] = (sp * sr + sy * (cp * cr));
+            this->ref(0, 1) = ((-sr * cp) + (spy) * cr);
+            this->ref(1, 1) = (cy * cr);
+            this->ref(2, 1) = (sp * sr + sy * (cp * cr));
 
-            this->mMtx[0][2] = (cy * sp);
-            this->mMtx[1][2] = (-sy);
-            this->mMtx[2][2] = (cpy);
+            this->ref(0, 2) = (cy * sp);
+            this->ref(1, 2) = (-sy);
+            this->ref(2, 2) = (cpy);
         }
 
         void getQuat(TQuat4f &rDest) const { // Non matching
@@ -246,17 +246,17 @@ namespace JGeometry {
             f32 wx = 2.0f * q.w * q.x;
             f32 wy = 2.0f * q.w * q.y;
             
-            this->mMtx[0][0] = 1.0f - yy - zz;
-            this->mMtx[0][1] = xy - wz;
-            this->mMtx[0][2] = xz + wy;
+            this->ref(0, 0) = 1.0f - yy - zz;
+            this->ref(0, 1) = xy - wz;
+            this->ref(0, 2) = xz + wy;
 
-            this->mMtx[1][0] = xy + wz;
-            this->mMtx[1][1] = 1.0f - xx - zz;
-            this->mMtx[1][2] = yz - wx;
+            this->ref(1, 0) = xy + wz;
+            this->ref(1, 1) = 1.0f - xx - zz;
+            this->ref(1, 2) = yz - wx;
 
-            this->mMtx[2][0] = xz - wy;
-            this->mMtx[2][1] = yz + wx;
-            this->mMtx[2][2] = 1.0f - xx - yy;
+            this->ref(2, 0) = xz - wy;
+            this->ref(2, 1) = yz + wx;
+            this->ref(2, 2) = 1.0f - xx - yy;
         }
 
         void makeMtx(MtxPtr pMtx) const {
@@ -289,9 +289,6 @@ namespace JGeometry {
         void setScale(const TVec3f &rSrc);
 
         void setRotate(const TVec3f& angle, const TVec3f& axis) {
-            // Force it to not inline(hack)
-            (void)0; (void)0; (void)0; (void)0; (void)0; (void)0; (void)0; (void)0;
-            (void)0; (void)0; (void)0; (void)0; (void)0; (void)0; (void)0; (void)0;
             TQuat4f q;
             q.setRotate(angle, axis);
             setQuat(q);
@@ -362,13 +359,6 @@ namespace JGeometry {
         }
 
         void setQT(const TQuat4f &rSrcQuat, const TVec3f &rSrcTrans);
-
-        inline void getTransInline(TVec3f &rDest) const {
-            f32 z = this->mMtx[2][3];
-            f32 y = this->mMtx[1][3];
-            f32 x = this->mMtx[0][3];
-            rDest.set(x, y, z);
-        }
     };
 
     typedef TMatrix34<TSMtxf> TMtx34f;

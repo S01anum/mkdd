@@ -23,7 +23,10 @@ class TJugem : public TMapObjHioNode, public StateObserver
 {
 public:
     TJugem();
-    virtual ~TJugem();
+    
+    virtual void MoveExec();
+    virtual void InitExec();
+
     virtual void loadAnimation();
     virtual void createModel(JKRSolidHeap *, u32);
     virtual void createShadowModel(JKRSolidHeap *, u32);
@@ -32,13 +35,16 @@ public:
     virtual void update();
     virtual void viewCalc(u32);
     virtual void setCurrentViewNo(u32);
+
     virtual const char *getBmdFileName();
     virtual const char *getShadowBmdFileName();
-    virtual const char *getJ3DModelDataTevStageNum();
+    virtual u32 getJ3DModelDataTevStageNum() const {
+        return 0x20020; // TODO: Identify what this value really represents.
+    }
     virtual void createColModel(J3DModelData *);
 
-    virtual void InitExec();
-    virtual void MoveExec();
+
+    virtual ~TJugem();
 
     void makeAnmCtrl(int num);
     void resetStaticData();
@@ -85,9 +91,6 @@ public:
 
     void setKartNum(u8);
     static u32 getScreenType();
-    u32 getJ3DModelDataTevStageNum() const {
-        return 0x20020; // TODO: Identify what this value really represents.
-    }
     
     void setCameraNum(u8 cam);
 
