@@ -246,7 +246,7 @@ void KartCrash::DoBombCrashCrl() {
             if (body->_594 < 6) {
                 body->mWg.x  += 0.314f;
                 GetKartCtrl()->ChaseFnumber(&body->_4bc, -0.209333f, 0.098f);
-                body->mWg.y += body->_4bc;
+                body->mWg.z += body->_4bc;
             }
             if (body->_594 > 100) {
                 body->_588 = 1;
