@@ -1,9 +1,8 @@
 #ifndef KARTCRASH_H
 #define KARTCRASH_H
 
-#include "JSystem/JGeometry/Vec.h"
 #include "Sato/ItemObj.h"
-#include "Shiraiwa/Objects/MapObjHioNode.h"
+#include "Shiraiwa/TKartThrower.h"
 
 class KartBody;
 
@@ -43,7 +42,7 @@ public:
     // void MakeRollCrash();
 private:
     KartBody* mBody;
-    TMapObjStamper* _4;
+    TKartThrower* _4;
     u32 _8;
     u8 _C;
     u8 _D;

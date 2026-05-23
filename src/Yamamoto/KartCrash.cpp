@@ -8,6 +8,7 @@
 #include "Sato/GeographyObj.h"
 #include "Sato/GeographyObjMgr.h"
 #include "Sato/JPEffectPerformer.h"
+#include "Shiraiwa/TKartThrower.h"
 #include "Yamamoto/kartCtrl.h"
 
 // comments inside functions are inline functions being called in that function
@@ -286,10 +287,40 @@ void KartCrash::MakeTornado() {
     u32 num = body->mMynum;
 
     if (body->getChecker()->CheckCrash() == false) {
-        _4 = (TMapObjStamper*)GetGeoObjMgr()->getKartReactHitObjectList(body->mMynum)[16];
-        JGeometry::TVec3f stack_8;
-        _4->frameProc();
+        _4 = (TKartThrower*)GetGeoObjMgr()->getKartReactHitObjectList(body->mMynum)[16];
 
+        //required to get loading order right lol
+        TKartThrower* temp_4 = _4;
+
+        JGeometry::TVec3f stack_8;
+        f32 fVar2 = 200.0f * temp_4->getThrowPow() * body->_3a4;
+
+        //Why do you need a whole vector if you are gonna multiply by 1.0f?
+        stack_8.set(0.0f, 1.0f, 0.0f);
+
+        body->_2cc.y += fVar2 * stack_8.y;
+
+        body->_4a8 = -0.0174444f;
+        body->_4bc = body->_4b0 = body->_4ac = 0.0f;
+        body->_584 = 15;
+        body->_588 = 0;
+        body->_594 = 0;
+        SaveDir();
+        body->mCarStatus |= (0x80000100000ul);
+        if ((body->getThunder()->mFlags & 1) == 0) {
+            if (body->_4a8 < 0.0f) {
+                JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1, num, body->mPos, 1);
+            } else {
+                JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1, num, body->mPos, 0);
+            }
+        }
+        body->getGame()->MakeClear();
+        body->getDamage()->SetDamageAnime();
+        body->getItem()->FallItem();
+        GetKartCtrl()->getKartSound(num)->DoSpinVoice();
+        body->getStrat()->DoMotor(MotorManager::MotorType_9);
+        GetKartCtrl()->getKartSound(body->mMynum)->DoKartsetSeSound(0x10080);
+        SetMatchlessTimer();
     }
 }
 
@@ -311,7 +342,66 @@ void KartCrash::DoTornadeCenter() {
     }
 }
 
-void KartCrash::DotornadeCrashCrl() {}
+void KartCrash::DotornadeCrashCrl() {
+    KartBody* body = mBody;
+    JGeometry::TVec3f stack_8;
+    switch (body->_588) {
+        case 0:
+            DoTornadeCenter();
+            body->_594 = 0;
+            body->mVel.y = 14.0f * body->getCrash()->_4->getThrowPow();
+
+            f32 cnvge_4ac = body->_4ac;
+
+            if (cnvge_4ac > 10.0f) {
+                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.069777697, 0.0069777598, 0.0069777598);
+            } else {
+                body->_4b0 = GetKartCtrl()->fcnvge(body->_4b0, 0.33, 0.0348888, 0.0348888);
+            }
+            cnvge_4ac = GetKartCtrl()->fcnvge(cnvge_4ac, 18.84, body->_4b0, body->_4b0);
+            if (body->_4a8 < 0.0f) {
+                body->mWg.y = -(cnvge_4ac - body->_4ac) / body->mSpeedScale;
+            } else {
+                body->mWg.y = (cnvge_4ac - body->_4ac) / body->mSpeedScale;
+            }
+            body->_4ac = cnvge_4ac;
+            cnvge_4ac = 0.0f;
+            if (body->_4ac > 17.6f) {
+                for (s32 i = 0; i < 4; i++) {
+                    body->getSus(i)->_10c = cnvge_4ac;
+                    body->getSus(i)->_110 = cnvge_4ac;
+                }
+                body->_588 = 1;
+            }
+            return;
+        case 1:
+            GetKartCtrl()->ChaseFnumber(&body->mWg.y, 0.0f, 0.05f);
+            if (body->_594 < 1) {
+                DoTornadeCenter();
+                body->_594++;
+                body->mVel.y = body->getCrash()->_4->getThrowPow();
+                return;
+            }
+            body->mVel.zero();
+            body->_2cc.zero();
+            _4->getVelocity(&stack_8);
+            body->mVel.x = -5.0f * stack_8.x;
+            body->mVel.y = 5.0f * stack_8.y;
+            body->mVel.z = -5.0f * stack_8.z;
+            body->_588 = 2;
+            return;
+        case 2:
+            GetKartCtrl()->ChaseFnumber(&body->mWg.y, 0.0f, 0.029999999f);
+            if (body->getTouchNum() != 0) {
+                body->getStrat()->MovingTornadeClear();
+                body->mVel.x *= 0.0099999998f;
+                body->mVel.y = 80.0f;
+                body->mVel.z *= 0.0099999998f;
+            }
+            return;
+    }
+    body->getStrat()->MovingTornadeClear();
+}
 
 void KartCrash::MakeSpin(ItemObj *) {}
 
