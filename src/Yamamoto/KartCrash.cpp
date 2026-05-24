@@ -2,19 +2,10 @@
 
 #include "JSystem/JAudio/JASFakeMatch2.h"
 
-#include "JSystem/JGeometry/Vec.h"
-#include "Kameda/MotorManager.h"
-#include "Kaneshige/RaceMgr.h"
-#include "Sato/GeographyObj.h"
-#include "Sato/GeographyObjMgr.h"
 #include "Sato/ItemObjMgr.h"
 #include "Sato/ItemTurtle.h"
-#include "Sato/J3DEffectMgr.h"
 #include "Sato/JPEffectPerformer.h"
 #include "Sato/stEffectMgr.h"
-#include "Shiraiwa/TKartThrower.h"
-#include "Yamamoto/kartCtrl.h"
-#include "types.h"
 
 // comments inside functions are inline functions being called in that function
 
