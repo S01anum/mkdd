@@ -33,7 +33,6 @@ public:
     f32 getRate() const { return mRate; }
     f32 getShadowRate() const { return getRate(); }
 
-
     bool isKind2() const { // fabricated
         bool ret = false;
         if (isInside()) {
