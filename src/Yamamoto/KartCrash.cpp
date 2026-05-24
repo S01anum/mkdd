@@ -9,7 +9,9 @@
 #include "Sato/GeographyObjMgr.h"
 #include "Sato/ItemObjMgr.h"
 #include "Sato/ItemTurtle.h"
+#include "Sato/J3DEffectMgr.h"
 #include "Sato/JPEffectPerformer.h"
+#include "Sato/stEffectMgr.h"
 #include "Shiraiwa/TKartThrower.h"
 #include "Yamamoto/kartCtrl.h"
 #include "types.h"
@@ -585,6 +587,55 @@ void KartCrash::MakeBurn(ItemObj *itemObj) {
     }
 }
 
-void KartCrash::MakeFreezeCrash() {}
+void KartCrash::MakeFreezeCrash() {
+    KartBody* body = mBody;
 
-void KartCrash::DoFreezeCrashCrl() {}
+    if (body->getChecker()->CheckCrash() != true) {
+        body->_584 = 18;
+        body->_588 = 0;
+        body->_594 = 0;
+        body->mCarStatus |=  (0x2000000100000);
+        u16 oldDamageFlags = body->getDamage()->mFlags;
+        body->getGame()->MakeClear();
+        body->getDamage()->mFlags = oldDamageFlags;
+        GetKartCtrl()->getKartAnime(body->mMynum)->DoStopAnime(body->mMynum);
+        body->getItem()->FallAllItem();
+        _8 = nullptr;
+        _8 = GetJ3DEfctMgr()->setEffectKart(body->mMynum, 3, body->_110);
+        //RCMGetManager doesn't inline here
+        RaceMgr::getManager()->getKartDrawer(body->mMynum)->playTevAnm(1);
+        GetKartCtrl()->getKartSound(body->mMynum)->DoKartsetSeSound(0x10060);
+        body->getStrat()->DoMotor(MotorManager::MotorType_16);
+        SetMatchlessTimer();
+        body->mCarStatus |= 0x80000000;
+        GetItemObjMgr()->abortItemShuffle(body->mMynum);
+        GetStEfctMgr()->setExhaustStopFlg(body->mMynum, true);
+    }
+}
+
+void KartCrash::DoFreezeCrashCrl() {
+    KartBody* body = mBody;
+
+    switch (body->_588) {
+        case 1:
+        break;
+        case 0:
+        body->mCarStatus |=  0x80000000;
+        GetItemObjMgr()->abortItemShuffle(body->mMynum);
+        body->_594++;
+        if (body->_594 == 90) {
+            if (_8 != nullptr) {
+                _8->setTrigger();
+                RaceMgr::getManager()->getKartDrawer(body->mMynum)->stopTevAnm();
+                GetKartCtrl()->getKartSound(body->mMynum)->DoKartsetSeSound(0x1004C);
+
+            }
+            GetKartCtrl()->getKartAnime(body->mMynum)->DoReStopAnime(body->mMynum);
+            body->getStrat()->FreezeClear();
+            GetStEfctMgr()->setExhaustStopFlg(body->mMynum, false);
+            body->getStrat()->DoMotor(MotorManager::MotorType_17);
+            body->_5c3 &= ~2;
+        }
+        break;
+    }
+}
