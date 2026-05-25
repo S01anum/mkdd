@@ -1220,7 +1220,7 @@ config.libs = [
             Object(NonMatching, "Kawano/osage.cpp"),
             Object(NonMatching, "Kawano/accessory.cpp"),
             Object(NonMatching, "Kawano/laurel.cpp"),
-            Object(NonMatching, "Kawano/driverObj.cpp"),
+            Object(Matching, "Kawano/driverObj.cpp"),
             Object(Matching, "Kawano/SceneTitleLine.cpp"),
             Object(NonMatching, "Kawano/StaffRoll2D.cpp")
         ]
