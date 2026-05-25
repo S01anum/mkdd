@@ -5,6 +5,7 @@
 #include "JSystem/JKernel/JKRHeap.h"
 #include "JSystem/JORReflexible.h"
 #include "Kaneshige/HioMgr.h"
+#include "macros.h"
 
 class PreRace2DParam : public JORReflexible {
 public:
@@ -40,5 +41,14 @@ public:
     static const u64 mPreRaceBckTag[2]; // 0x80371070
     // Inline/Unused
     ~PreRace2D();
+
+    int getStatus() const { return mStatus; }
+    int getWipeType() const { return mWipeType; }
+private:
+    PLACEHOLDER_BYTES(0, 0x24);
+    int mStatus; // 24
+    PLACEHOLDER_BYTES(0x28, 0x2c);
+    int mWipeType; // 2c
+    PLACEHOLDER_BYTES(0x30, 0xe0);
 }; // class PreRace2D
 #endif // PRERACE2D_H

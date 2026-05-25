@@ -27,6 +27,8 @@ public:
         return mThis;
     }
 
+    bool isResultStart() const { return mResultStart; }
+
 private:
     static PauseManager *mThis;    // 0x80416298
     static bool mIsPause;          // 0x8041629c
