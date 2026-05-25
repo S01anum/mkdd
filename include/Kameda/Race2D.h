@@ -60,7 +60,7 @@ public:
     void setEscapeColor(int);                                                                     // 0x80161894
     void getTimeColor(JUTColor, JUTColor);                                        // 0x80162844
     void startBombDemo();                                                                         // 0x801629bc
-    void isAlarm(int);                                                                            // 0x801629e0
+    bool isAlarm(int);                                                                            // 0x801629e0
     void getMapPos(int, JGeometry::TVec3f &, JGeometry::TVec2f &);                    // 0x80162a40
     void getCharacterInfo(int, int, f32 &, f32 &, f32 &);                                   // 0x80162dac
     void getCharacterClr(int, int, int, JUTColor &, JUTColor &, u8 &); // 0x80162ec8
@@ -124,9 +124,23 @@ public:
     static Task *mTask;                                                                             // 0x80416304
     // Inline/Unused
     ~Race2D();
-    void getItemPos(int, int, JGeometry::TVec2<f32> &);
+    void getItemPos(int, int, JGeometry::TVec2f &);
     void itemUseInit();
     void itemUseMain();
+
+    void reset() { init(); }
+    void hide() { mHideFrame = 1; }
+    
+    int getHideFrame() const { return mHideFrame; }
+    void setDrawFlag(bool enable) { mDrawFlag = enable; }
+
+    void endBombDemo() { mIsEndBombDemo = true; }
+private:
+    PLACEHOLDER_BYTES(0, 0x4ebc);
+    int mHideFrame;  // 4ebc
+    bool mDrawFlag; // 4ec0
+    bool mIsEndBombDemo; // 4ec1
+    PLACEHOLDER_BYTES(0x4ec2, 0x4ec4);
 };
 
 #endif // RACE2D_H

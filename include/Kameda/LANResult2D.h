@@ -30,5 +30,9 @@ public:
     void start(int); // 0x80195664
     // Inline/Unused
     ~LANResult2D();
+
+    void reset() { init(); }
+private:
+    PLACEHOLDER_BYTES(0, 0x1c);
 }; // class LANResult2D
 #endif // LANRESULT2D_H

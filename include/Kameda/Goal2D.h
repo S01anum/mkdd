@@ -37,5 +37,12 @@ public:
     static bool mDrawEndFlag; // 0x80416290
     // Inline/Unused
     ~Goal2D();
+
+    void reset() { init(); }
+    int getAnmFrame(int status) const { return mAnmFrame[status*4]; }
+private:
+    PLACEHOLDER_BYTES(0, 0xb0);
+    int mAnmFrame[4]; // b0 TODO: check size/is this part of a sub struct
+    PLACEHOLDER_BYTES(0xc0, 0xec);
 }; // class Goal2D
 #endif // GOAL2D_H

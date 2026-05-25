@@ -391,7 +391,7 @@ void Race2D::getTimeColor(JUTColor, JUTColor) {}
 
 void Race2D::startBombDemo() {}
 
-void Race2D::isAlarm(int) {}
+bool Race2D::isAlarm(int) {}
 
 void Race2D::getMapPos(int, JGeometry::TVec3f &, JGeometry::TVec2f &) {}
 

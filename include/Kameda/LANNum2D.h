@@ -34,5 +34,9 @@ public:
     void start2(); // 0x80197c88
     // Inline/Unused
     ~LANNum2D();
+
+    void reset() { init(); }
+private:
+    PLACEHOLDER_BYTES(0, 0x10c);
 }; // class LANNum2D
 #endif // LANNUM2D_H
