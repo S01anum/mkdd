@@ -60,11 +60,11 @@ public:
 
     static J2DManager *getManager() { return mThis; }
 
-    static const char *mKartNumberName[8]; // 0x80394378
-    static int mKart2Status[8];            // 0x803fb9a0
-    static int mStatus2Kart[8];            // 0x803fba10
-    static J2DManager *mThis;              // 0x80416288
-    static bool mNetFlag;                  // 0x8041628c
+    static char *mKartNumberName[8]; // 0x80394378
+    static int mKart2Status[8];      // 0x803fb9a0
+    static int mStatus2Kart[8];      // 0x803fba10
+    static J2DManager *mThis;        // 0x80416288
+    static bool mNetFlag;            // 0x8041628c
 
     JKRArchive *mArchive;
     J2DOrthoGraph *mOrtho;

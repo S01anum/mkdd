@@ -18,6 +18,12 @@ public:
 
     // TODO: many inlines
 
+    static const u64 mBckTag[13];    // 0x80375e70
+    static const u64 mBtkTag[4];     // 0x80375ed8
+    static const u64 mBrkTag[9];     // 0x80375ef8
+    static const u64 mTextBoxTag[4]; // 0x80375f40
+    static const u64 mVisibleTag[3]; // 0x80375f60
+
 //private:
     u8 _0[0x2e8];
     u32 _2e8;
