@@ -232,9 +232,9 @@ private:
     static Vec scLapPointsIn_multi[10];
 
     // JugemReverse
-    static Vec scReversePoints2[4];
-    static Vec scReversePoints0_1p[5];
-    static Vec scReversePoints0_multi[5];
+    static const Vec scReversePoints2[4];
+    static const Vec scReversePoints0_1p[5];
+    static const Vec scReversePoints0_multi[5];
     static const Vec scReversePoints1_1p[6]; // unused
     static const Vec scReversePoints1_multi[6];
     static s16 scReverseJudgeTime;

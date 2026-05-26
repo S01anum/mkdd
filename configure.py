@@ -1347,7 +1347,7 @@ config.libs = [
             Object(Matching, "Shiraiwa/JugemMain.cpp"),
             Object(Matching, "Shiraiwa/JugemLap.cpp"),
             Object(Matching, "Shiraiwa/Interp.cpp"),
-            Object(Equivalent, "Shiraiwa/JugemReverse.cpp"),
+            Object(Matching, "Shiraiwa/JugemReverse.cpp"),
             Object(Matching, "Shiraiwa/JugemRescue.cpp"),
             Object(Matching, "Shiraiwa/JugemVoidRod.cpp"),
             Object(Matching, "Shiraiwa/JugemStart.cpp"),
